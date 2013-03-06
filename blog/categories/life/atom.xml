@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Chris's Blog]]></title>
-  <link href="http://askcuix.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Life | Chris's Blog]]></title>
+  <link href="http://askcuix.github.com/blog/categories/life/atom.xml" rel="self"/>
   <link href="http://askcuix.github.com/"/>
   <updated>2013-03-07T00:15:56+08:00</updated>
   <id>http://askcuix.github.com/</id>
