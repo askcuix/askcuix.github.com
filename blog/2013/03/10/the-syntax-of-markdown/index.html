@@ -59,13 +59,21 @@
   
 </ul>
   
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:askcuix.github.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
+<form action="http://www.google.com" id="cse-search-box">
+    <fieldset role="search">
+      <input class="search" type="text" name="q" results="0"/>
+      <input type="hidden" name="cx" value="010330911247007516125:lvfpiqfzfs8" />
+      <input type="hidden" name="ie" value="UTF-8" />
+    </fieldset>
 </form>
   
+  <script type="text/javascript">
+  (function() {
+    var job = document.createElement('script'); job.type = 'text/javascript'; job.async = true;
+    job.src = 'http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en';
+    var ss = document.getElementsByTagName('script'), s=ss[ss.length-1]; s.parentNode.insertBefore(job, s); s=null;
+  })();
+  </script>
 <ul class="main-navigation">
   <li><a href="/">Blog</a></li>
   <li><a href="/blog/archives">Archives</a></li>
