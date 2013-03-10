@@ -2,19 +2,27 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://askcuix.github.com/blog/2013/03/06/new-blog-opening/</loc>
-        <lastmod>2013-03-07T00:06:07+08:00</lastmod>
+        <lastmod>2013-03-10T18:31:46+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://askcuix.github.com/blog/2013/03/10/the-common-commands-of-octopress/</loc>
+        <lastmod>2013-03-10T18:27:42+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown/</loc>
+        <lastmod>2013-03-10T20:15:59+08:00</lastmod>
     </url>
     <url>
         <loc>http://askcuix.github.com/about/</loc>
-        <lastmod>2013-03-07T00:06:37+08:00</lastmod>
+        <lastmod>2013-03-10T20:07:31+08:00</lastmod>
     </url>
     <url>
         <loc>http://askcuix.github.com/blog/archives/</loc>
-        <lastmod>2013-03-07T00:06:07+08:00</lastmod>
+        <lastmod>2013-03-10T20:15:59+08:00</lastmod>
     </url>
     <url>
         <loc>http://askcuix.github.com/</loc>
-        <lastmod>2013-03-07T00:06:07+08:00</lastmod>
+        <lastmod>2013-03-10T20:15:59+08:00</lastmod>
     </url>
     <url>
         <loc>http://askcuix.github.com/robots.txt</loc>

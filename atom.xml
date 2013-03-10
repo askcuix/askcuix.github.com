@@ -4,7 +4,7 @@
   <title><![CDATA[Chris's Blog]]></title>
   <link href="http://askcuix.github.com/atom.xml" rel="self"/>
   <link href="http://askcuix.github.com/"/>
-  <updated>2013-03-10T17:00:14+08:00</updated>
+  <updated>2013-03-10T20:15:59+08:00</updated>
   <id>http://askcuix.github.com/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -14,11 +14,131 @@
 
   
   <entry>
+    <title type="html"><![CDATA[The syntax of markdown]]></title>
+    <link href="http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown/"/>
+    <updated>2013-03-10T17:36:00+08:00</updated>
+    <id>http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown</id>
+    <content type="html"><![CDATA[<p>Octopress使用的是markdown语法，和wiki的语法有点相似，但又不完全相同，这里将常用的语法记录下来便于查阅。</p>
+
+<h2>标题</h2>
+
+<p>标题用#开头，一个#是一级标题，两个#是二级标题，#越多字体越小。</p>
+
+<!-- more -->
+
+
+<h2>换行</h2>
+
+<p>在每一行的末尾以两个或更多个空格符号结束，然后再打回车键，即可实现 <code>&lt;br /&gt;</code>的效果。</p>
+
+<h2>链接</h2>
+
+<p><code>[text](link)</code>
+创建文本链接。</p>
+
+<h2>图片</h2>
+
+<p>与链接类似，区别是前面增加叹号!：</p>
+
+<p><code>![text](link)</code></p>
+
+<h2>引用</h2>
+
+<p>用<code>&gt;</code>开头的一个段落。</p>
+
+<p>用四个空格缩进的段落，会按原始格式显示。也可以通过在引用段落的前后各加一行波浪号~~~~~~来实现。</p>
+
+<h2>显示效果</h2>
+
+<p>用<code>*</code>或<code>_</code>包围的文字会用斜体显示。</p>
+
+<p>双重符号<code>**</code>或<code>__</code>则会用粗体显示。</p>
+
+<p>用`包围的文字按代码格式显示。</p>
+
+<h2>列表</h2>
+
+<p>无序列表用*, +, -开头。子项缩进两个空格。</p>
+
+<p>有序列表用数字加英文句点。</p>
+
+<h2>水平线</h2>
+
+<p>在一行里只放三个或更多个<code>\</code>，或<code>*</code>或<code>_</code>，就可以实现水平线标记<code>&lt;hr /&gt;</code></p>
+
+<h2>脚注</h2>
+
+<p>以<code>[^1]:</code> 开头，后面跟着定义。</p>
+
+<h2>嵌入代码</h2>
+
+<pre><code> ``` [language] [title] [url] [link text]
+   code snippet
+ ```
+</code></pre>
+
+<h2>转义</h2>
+
+<p>用<code>\</code>可转义Markdown元字符。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Octopress常用命令]]></title>
+    <link href="http://askcuix.github.com/blog/2013/03/10/the-common-commands-of-octopress/"/>
+    <updated>2013-03-10T17:34:00+08:00</updated>
+    <id>http://askcuix.github.com/blog/2013/03/10/the-common-commands-of-octopress</id>
+    <content type="html"><![CDATA[<p>Octopress经常使用到的命令，在这里做个总结，方面查阅。</p>
+
+<pre><code>rake new_post["title"]
+</code></pre>
+
+<p>创建一个post。</p>
+
+<pre><code>rake new_page[super-awesome/page.html]
+</code></pre>
+
+<p>创建一个page。</p>
+
+<!-- more -->
+
+
+<pre><code>&lt;!-- more --&gt;
+</code></pre>
+
+<p>插入到文章当中，用来实现摘要模式。</p>
+
+<pre><code>rake generate
+</code></pre>
+
+<p>生成post/page。</p>
+
+<pre><code>rake preview
+</code></pre>
+
+<p>预览效果：http://localhost:4000</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[New Blog Opening]]></title>
     <link href="http://askcuix.github.com/blog/2013/03/06/new-blog-opening/"/>
     <updated>2013-03-06T23:42:00+08:00</updated>
     <id>http://askcuix.github.com/blog/2013/03/06/new-blog-opening</id>
-    <content type="html"><![CDATA[<p>Opening new blog on github which base on Octopress.</p>
+    <content type="html"><![CDATA[<p>新blog开张啦，以此博文作为纪念。</p>
+
+<p>这些年折腾了好几个博客了，但加起来的文字总共也没有多少，我的热乎劲也就在搭建那一刹那，特别是像在GAE上要自己去折腾整个过程。所以说，我并不热衷于写博客，而是中意于搭建这样一个小站的过程。说到原因呢，可能是因为哥曾经也是个web developer，但最近几年一直在做backend，把以前的frontend功底也丢的差不多了，所以每次遇到这样的机会，总是会让我心潮澎湃。</p>
+
+<!-- more -->
+
+
+<p>Github是developer的聚集地，尤其是开源爱好者们，搭建这个blog也是为了更亲近这个社区，octopress被很多developer用来在Github上搭建blog，也想了解下，顺便沾染点geeker的感觉。</p>
+
+<p>以前从没接触过ruby，也不知什么原因，就是对它没兴趣，我更愿意去用python，结果这次的搭建过程真叫折腾。从在Mac上安装ruby，到彻底安装上octopress，不断的遇到gcc，make，openssl等问题，不知道重试了多少遍，最后还是按照ruby China上的wiki，用了淘宝的mirror才安装成功。Linux功底不行啊，对这些问题完全束手无策。</p>
+
+<p>不知道会在这个blog上写多少东西，准备在这里纪录一些学习笔记，平时很多东西都记录在Evernote上了，今后可以选择性的放一些在这里。前面也说过了，我并不擅长于写博客，因为我的文笔实在不咋地，写一篇拿出来见人的东西要花费很长时间，慢慢地也就没了兴趣，另一方面，自己也确实缺乏毅力，总是没能坚持写下去。我希望自己对待这个blog能有点毅力，既是对自己学习过程的监督，也是对写作能力的培养。</p>
+
+<p><strong><em>Keep Walking……</em></strong></p>
 ]]></content>
   </entry>
   

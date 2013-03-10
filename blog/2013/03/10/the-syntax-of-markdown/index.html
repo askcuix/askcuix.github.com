@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Life - Chris's Blog</title>
+  <title>The syntax of markdown - Chris's Blog</title>
   <meta name="author" content="Chris">
 
   
-  <meta name="description" content="Category: Life">
+  <meta name="description" content="Octopress使用的是markdown语法，和wiki的语法有点相似，但又不完全相同，这里将常用的语法记录下来便于查阅。 标题 标题用#开头，一个#是一级标题，两个#是二级标题，#越多字体越小。 换行 在每一行的末尾以两个或更多个空格符号结束，然后再打回车键，即可实现 &lt;br /&gt; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://askcuix.github.com/blog/categories/life/">
+  <link rel="canonical" href="http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Chris's Blog" type="application/atom+xml">
@@ -76,64 +76,151 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Life</h1>
+    
+      <h1 class="entry-title">The Syntax of Markdown</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-10T17:36:00+08:00" pubdate data-updated="true">Mar 10<span>th</span>, 2013</time>
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>Octopress使用的是markdown语法，和wiki的语法有点相似，但又不完全相同，这里将常用的语法记录下来便于查阅。</p>
 
-  
-  <h2>2013</h2>
+<h2>标题</h2>
 
-<article>
-  
-<h1><a href="/blog/2013/03/10/the-syntax-of-markdown/">The syntax of markdown</a></h1>
-<time datetime="2013-03-10T17:36:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>10</span> <span class='year'>2013</span></time>
+<p>标题用#开头，一个#是一级标题，两个#是二级标题，#越多字体越小。</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/life/'>Life</a></span>
-</footer>
+<!-- more -->
 
 
-</article>
+<h2>换行</h2>
 
+<p>在每一行的末尾以两个或更多个空格符号结束，然后再打回车键，即可实现 <code>&lt;br /&gt;</code>的效果。</p>
 
+<h2>链接</h2>
 
-<article>
-  
-<h1><a href="/blog/2013/03/10/the-common-commands-of-octopress/">Octopress常用命令</a></h1>
-<time datetime="2013-03-10T17:34:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>10</span> <span class='year'>2013</span></time>
+<p><code>[text](link)</code>
+创建文本链接。</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/life/'>Life</a></span>
-</footer>
+<h2>图片</h2>
 
+<p>与链接类似，区别是前面增加叹号!：</p>
 
-</article>
+<p><code>![text](link)</code></p>
 
+<h2>引用</h2>
 
+<p>用<code>&gt;</code>开头的一个段落。</p>
 
-<article>
-  
-<h1><a href="/blog/2013/03/06/new-blog-opening/">New Blog Opening</a></h1>
-<time datetime="2013-03-06T23:42:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>06</span> <span class='year'>2013</span></time>
+<p>用四个空格缩进的段落，会按原始格式显示。也可以通过在引用段落的前后各加一行波浪号~~~~~~来实现。</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/life/'>Life</a></span>
-</footer>
+<h2>显示效果</h2>
 
+<p>用<code>*</code>或<code>_</code>包围的文字会用斜体显示。</p>
 
-</article>
+<p>双重符号<code>**</code>或<code>__</code>则会用粗体显示。</p>
 
+<p>用`包围的文字按代码格式显示。</p>
+
+<h2>列表</h2>
+
+<p>无序列表用*, +, -开头。子项缩进两个空格。</p>
+
+<p>有序列表用数字加英文句点。</p>
+
+<h2>水平线</h2>
+
+<p>在一行里只放三个或更多个<code>\</code>，或<code>*</code>或<code>_</code>，就可以实现水平线标记<code>&lt;hr /&gt;</code></p>
+
+<h2>脚注</h2>
+
+<p>以<code>[^1]:</code> 开头，后面跟着定义。</p>
+
+<h2>嵌入代码</h2>
+
+<pre><code> ``` [language] [title] [url] [link text]
+   code snippet
+ ```
+</code></pre>
+
+<h2>转义</h2>
+
+<p>用<code>\</code>可转义Markdown元字符。</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Chris</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-10T17:36:00+08:00" pubdate data-updated="true">Mar 10<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/life/'>Life</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/03/10/the-common-commands-of-octopress/" title="Previous Post: Octopress常用命令">&laquo; Octopress常用命令</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -206,7 +293,10 @@
       var disqus_shortname = 'askcuix';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown/';
+        var disqus_url = 'http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
