@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Life | Chris's Blog]]></title>
   <link href="http://askcuix.github.com/blog/categories/life/atom.xml" rel="self"/>
   <link href="http://askcuix.github.com/"/>
-  <updated>2013-03-10T21:13:15+08:00</updated>
+  <updated>2013-03-16T01:11:55+08:00</updated>
   <id>http://askcuix.github.com/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -12,113 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[The syntax of markdown]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown/"/>
-    <updated>2013-03-10T17:36:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown</id>
-    <content type="html"><![CDATA[<p>Octopress使用的是markdown语法，和wiki的语法有点相似，但又不完全相同，这里将常用的语法记录下来便于查阅。</p>
-
-<h2>标题</h2>
-
-<p>标题用#开头，一个#是一级标题，两个#是二级标题，#越多字体越小。</p>
-
-<!-- more -->
-
-
-<h2>换行</h2>
-
-<p>在每一行的末尾以两个或更多个空格符号结束，然后再打回车键，即可实现 <code>&lt;br /&gt;</code>的效果。</p>
-
-<h2>链接</h2>
-
-<p><code>[text](link)</code>
-创建文本链接。</p>
-
-<h2>图片</h2>
-
-<p>与链接类似，区别是前面增加叹号!：</p>
-
-<p><code>![text](link)</code></p>
-
-<h2>引用</h2>
-
-<p>用<code>&gt;</code>开头的一个段落。</p>
-
-<p>用四个空格缩进的段落，会按原始格式显示。也可以通过在引用段落的前后各加一行波浪号~~~~~~来实现。</p>
-
-<h2>显示效果</h2>
-
-<p>用<code>*</code>或<code>_</code>包围的文字会用斜体显示。</p>
-
-<p>双重符号<code>**</code>或<code>__</code>则会用粗体显示。</p>
-
-<p>用`包围的文字按代码格式显示。</p>
-
-<h2>列表</h2>
-
-<p>无序列表用*, +, -开头。子项缩进两个空格。</p>
-
-<p>有序列表用数字加英文句点。</p>
-
-<h2>水平线</h2>
-
-<p>在一行里只放三个或更多个<code>\</code>，或<code>*</code>或<code>_</code>，就可以实现水平线标记<code>&lt;hr /&gt;</code></p>
-
-<h2>脚注</h2>
-
-<p>以<code>[^1]:</code> 开头，后面跟着定义。</p>
-
-<h2>嵌入代码</h2>
-
-<pre><code> ``` [language] [title] [url] [link text]
-   code snippet
- ```
-</code></pre>
-
-<h2>转义</h2>
-
-<p>用<code>\</code>可转义Markdown元字符。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Octopress常用命令]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/10/the-common-commands-of-octopress/"/>
-    <updated>2013-03-10T17:34:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/10/the-common-commands-of-octopress</id>
-    <content type="html"><![CDATA[<p>Octopress经常使用到的命令，在这里做个总结，方面查阅。</p>
-
-<pre><code>rake new_post["title"]
-</code></pre>
-
-<p>创建一个post。</p>
-
-<pre><code>rake new_page[super-awesome/page.html]
-</code></pre>
-
-<p>创建一个page。</p>
-
-<!-- more -->
-
-
-<pre><code>&lt;!-- more --&gt;
-</code></pre>
-
-<p>插入到文章当中，用来实现摘要模式。</p>
-
-<pre><code>rake generate
-</code></pre>
-
-<p>生成post/page。</p>
-
-<pre><code>rake preview
-</code></pre>
-
-<p>预览效果：http://localhost:4000</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[New Blog Opening]]></title>

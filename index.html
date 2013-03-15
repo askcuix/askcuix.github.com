@@ -9,7 +9,7 @@
   <meta name="author" content="Chris">
 
   
-  <meta name="description" content="Octopress使用的是markdown语法，和wiki的语法有点相似，但又不完全相同，这里将常用的语法记录下来便于查阅。 标题 标题用#开头，一个#是一级标题，两个#是二级标题，#越多字体越小。 ">
+  <meta name="description" content="工作中经常会涉及到文件处理，而fixlength类型的文件又是一种很常见的格式。众所周知，fixlength类型的数据就是每个字段对应一行数据中固定长度的字符，每个字段都有对应的start offset和end offset，用实现来表示就是String.substring(start, end &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -85,6 +85,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/15/supplementary-characters-in-java/">Supplementary Characters in Java</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-15T23:37:00+08:00" pubdate data-updated="true">Mar 15<span>th</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>工作中经常会涉及到文件处理，而fixlength类型的文件又是一种很常见的格式。众所周知，fixlength类型的数据就是每个字段对应一行数据中固定长度的字符，每个字段都有对应的start offset和end offset，用实现来表示就是String.substring(start, end)，所以start和end的位置是至关重要的，一个字段对应错了，后面的字段就全错了。</p>
+
+<p>在Java中使用UTF-16来表示unicode字符，一个字符就是16 bit，像String.length()就是返回有多少个16 bit。unicode支持的字符的code point范围是U+0000到U+10FFFF，这其中包括基本字符（BMP）和补充字符（supplementary character），基本字符时从U+0000到U+FFFF，补充字符从U+10000到U+10FFFF。</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/03/15/supplementary-characters-in-java/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -251,11 +291,15 @@
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li>&raquo; <a href='/blog/categories/life'>Life ( 3 )</a></li></ul>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 1 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/15/supplementary-characters-in-java/">Supplementary Characters in Java</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/03/10/the-syntax-of-markdown/">The syntax of markdown</a>
