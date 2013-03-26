@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Chris's Blog]]></title>
   <link href="http://askcuix.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://askcuix.github.com/"/>
-  <updated>2013-03-27T00:25:49+08:00</updated>
+  <updated>2013-03-27T00:27:09+08:00</updated>
   <id>http://askcuix.github.com/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -12,6 +12,37 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Common Format of CSV Files]]></title>
+    <link href="http://askcuix.github.com/blog/2013/03/26/common-format-of-csv-files/"/>
+    <updated>2013-03-26T23:43:00+08:00</updated>
+    <id>http://askcuix.github.com/blog/2013/03/26/common-format-of-csv-files</id>
+    <content type="html"><![CDATA[<p>CSV是一种常见的文件格式，常用于不同系统之间的数据交换，对于该文件格式可以简单描述为：一组使用逗号“,”分隔字段，并以换行符作为一行数据结束的数据集合。该文件可以使用Microsoft Excel查看，但是中文字符会显示为乱码。</p>
+
+<p>这个描述就真的只是简单描述，实际上CSV的格式处理没有这么简单。最近在和另外一个系统做集成，我们的系统会提供CSV数据文件给对方系统处理，由于我们系统中个别字段会包括换行符“CRLF”（这是遗留系统，就不用纠结为什么字段中会包含换行符了），也就是说一个字段可能会显示在几行上，但是这个字段是包含在双引号中的，结果对方系统就处理不了了。因为对方系统只是简单的按行处理数据，用逗号解析字段。</p>
+
+<!-- more -->
+
+
+<p>这种解析方式通常是没有问题，但是是不完整的。<a href="http://tools.ietf.org/html/rfc4180"><strong>RFC 4180</strong></a>是CSV格式的标准，这里提到并没有官方的规范去定义CSV的格式到底是怎样的，但是根据大多数的实现来看，应该有如下格式：</p>
+
+<ul>
+<li><p>每条数据用换行符（CRLF）分割。</p></li>
+<li><p>最后一条数据可以不包含换行符。</p></li>
+<li><p>可选的header行，如有的话，应该出现在第一行，并且与下面的数据有相同数量的字段。</p></li>
+<li><p>在header和每条数据中，使用逗号“,”分隔字段，每一行都应该包含相同数量的字段，空白字符也可作为一个字段，一条数据的最后一个字段不应添加逗号分隔符。</p></li>
+<li><p>每个字段可以包含在双引号中。</p></li>
+<li><p>如果字段中包含换行符（CRLF），双引号和逗号，则必须将字段包含在双引号中。</p></li>
+<li><p>如果字段中包含双引号，则除了需要将字段包含在双引号中，还要在字段中的双引号前再加一个双引号作为转义。</p></li>
+</ul>
+
+
+<p>由此可见，字段中是允许出现换行符的，只要该字段是包含在双引号中的。我也查阅了Spring Batch的CSV Reader的实现，也考虑到了该问题，在发现换行符的同时，也会检查当前字段是否已结束。</p>
+
+<p>因此，我们在生成或解析CSV文件时，应该要考虑到以上特殊字符的处理，在apache的common-lang包中，也有专门针对CSV字符的转义方法，可参考<a href="http://commons.apache.org/proper/commons-lang/javadocs/api-release/org/apache/commons/lang3/StringEscapeUtils.html">StringEscapeUtils</a>，在最大程度上保证系统的robust。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[JVM运行时内存区域]]></title>
