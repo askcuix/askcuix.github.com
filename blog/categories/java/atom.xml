@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Chris's Blog]]></title>
   <link href="http://askcuix.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://askcuix.github.com/"/>
-  <updated>2013-04-01T22:32:13+08:00</updated>
+  <updated>2013-04-01T23:58:34+08:00</updated>
   <id>http://askcuix.github.com/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -12,6 +12,145 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The foundation of spring batch]]></title>
+    <link href="http://askcuix.github.com/blog/2013/04/01/the-foundation-of-spring-batch/"/>
+    <updated>2013-04-01T22:46:00+08:00</updated>
+    <id>http://askcuix.github.com/blog/2013/04/01/the-foundation-of-spring-batch</id>
+    <content type="html"><![CDATA[<p>Spring Batch是埃森哲贡献给Spring的一个开源项目，现在由双方共同维护。通过Spring Batch可以构建出轻量级的大数据量并⾏处理应⽤,⽀持事务、并发、流程、监控、纵向和横向扩展,提供统一的接口管理。Spring Batch并不包含scheduler，它只是一个通用的batch处理框架，你可以通过QuartZ，Control-M等scheduler去调用。</p>
+
+<p>Spring Batch能够处理大批量数据的导入、导出和业务逻辑计算，执行过程无需人工干预。我们的系统是一个金融产品信息的数据中心，需要从不同的系统读取产品信息，也需要将这些信息提供给其它的系统，这种data loading就是Spring Batch的一种应用场景。</p>
+
+<!-- more -->
+
+
+<p><img src="/images/blog/spring_batch_common_process.png" alt="Spring Batch Common Process" /></p>
+
+<p>上图就是Spring Batch的常用方式，从DB或是不同类型的文件中读取数据，经过转换后再写入DB或者文件。</p>
+
+<p><img src="/images/blog/spring_batch_domain.png" alt="Spring Batch Domain" /></p>
+
+<p>上图是一个Job执行的结构图，下面是对这些domain对象的简单描述，只是学习时随笔记下来的，不够详细，可以查看Spring Batch文档中的描述。</p>
+
+<h2>Job</h2>
+
+<p>Job是对一个batch处理流程的定义，可以简单理解为Spring中的一个Job配置，一般都包括reader和writer。</p>
+
+<h2>JobInstance</h2>
+
+<p>JobInstance是Job运行时产生的实例，如果这个Job是按天执行的，则每天都会创建一个JobInstance；当Job执行失败时，restart这个Job将会重用JobInstance，以便于从执行失败的地方开始重新执行。</p>
+
+<h2>JobParameter</h2>
+
+<p>JobParameter用于标识一个JobInstance，可以将它理解为JobInstance的ID。</p>
+
+<h2>JobListener</h2>
+
+<p>JobListener可以监听JobInstance生命周期中的两个事件：</p>
+
+<p><strong>beforeJob</strong> - 在Job执行前被调用。</p>
+
+<p><strong>afterJob</strong> - 不论Job执行成功或失败都会被调用，Job的status可以从JobExecution中获取。</p>
+
+<h2>Parent Job</h2>
+
+<p>对于相似的Job，可以取出相同的部分定义成一个parent Job，只需要在Job定义时添加<em>abstract="true"</em>，然后在sub Job中通过<em>parent</em>属性来指定parent Job。</p>
+
+<h2>JobRepository</h2>
+
+<p>MapJobRepository通常用于测试环境或是standalone的batch。它不够稳定；不允许在不同JVM实例之间执行restart；也不能保证有相同JobParameter的两个JobInstance同时运行；它不适合在多线程Job或本地的partition step中使用。但是它仍然需要配置transaction manager，因为在Job的实现中会涉及到rollback的问题，所以可以用ResourcelessTransactionManager来代替。</p>
+
+<h2>JobLauncher</h2>
+
+<p>JobLauncher使用spring的taskExecutor来实现异步处理，只需要在配置中指定taskExecutor属性。如果batch是通过http request的方式触发的，那应当使用异步的方式来处理Job以避免长时间的占用链接。</p>
+
+<h2>JobOperator</h2>
+
+<p>JobOperator的stop()不会立刻停止一个Job，如果当前流程处理的控制权在framework，则会将StepExecution的status设置为STOPPED并保存，然后按正常的处理流程结束Job。</p>
+
+<p>如果不希望一个restartable的Job在执行失败后restart，可以将status设置为ABORTED。</p>
+
+<h2>JobParametersIncrementer</h2>
+
+<p>JobParametersIncrementer可强制创建一个新的jobInstance，以避免在使用相同JobParameter时不可以再次执行Job。这只是个接口，需要自己去实现getNext()，然后在Job中定义incremented属性来引用它。</p>
+
+<h2>Step</h2>
+
+<p><strong>start-limit</strong>： 用于step的restart，用来控制一个start的次数。默认是Integer.MAX_VALUE。<br/>
+<strong>allow-start-if-complete</strong>： 强制执行step，不管之前执行成功或失败。</p>
+
+<h3>Skip</h3>
+
+<p>通过指定exception来决定是否skip有问题的数据，可以结合include和exclude来定义exception列表。</p>
+
+<p><strong>skip-limit</strong>：用来控制允许skip的数据的最大数量，在step execution中分别保存有针对read，process和write中skip的数量。</p>
+
+<h3>Retry</h3>
+
+<p>通过指定exception来指定是否允许重试当前有问题的错误数据，对于一些通过重试可以解决问题的数据是非常有用的，比如更新当前数据到DB时，该条数据被其它进程lock了，则在重试时可能就可以正常更新了。</p>
+
+<p><strong>retry-limit</strong>：用来控制每个item允许重试的次数。</p>
+
+<h3>Rollback</h3>
+
+<p>通过指定exception来忽略rollback操作。对于Skip和Retry，如果Exception是由ItemWriter抛出的，则step中被当前transaction控制的数据会被rollback，因此要配合使用no-rollback-exception-classes来决定是否应该执行rollback。</p>
+
+<p>Step通常会缓存Reader读入的数据，如果发生了rollback则不需要重新读入数据，但是对于一些基于transaction资源的Reader，比如从JMS queue中读取数据的Reader，JMS message也会执行rollback，则需要通过is-reader-transactional-queue来标识不需要缓存读入数据。</p>
+
+<h2>ItemStream</h2>
+
+<p>在Step执行失败需要restart时，可以通过ItemStream获取存储在execution之间状态信息。如果ItemReader，ItemProcessor或者ItemWriter实现了ItemStream接口，则会自动被注册在Spring Context中；否则需要单独注册streams。对于CompositeItemWriter，如果delegate的ItemWriter实现了ItemStream接口，也需要主动注册。</p>
+
+<h2>StepListener</h2>
+
+<p>和ItemStream一样，如果ItemReader，ItemProcessor或者ItemWriter实现了StepListener接口，则会被自动注册。</p>
+
+<h3>StepExecutionListener</h3>
+
+<p><strong>beforeStep</strong> - 在step执行之前调用。<br/>
+<strong>afterStep</strong> - 在step结束时调用，不管执行成功或失败。可以在这里更改ExitStatus。</p>
+
+<h3>ChunkListener</h3>
+
+<p><strong>beforeChunk</strong> - 被调用在transaction开始后，但在ItemReader的read方法执行前。<br/>
+<strong>afterChunk</strong> - chunk被commit/rollback后被调用。</p>
+
+<p>ChunkListener也可被用在未使用chunk方式的step中，比如Tasklet， 会在tasklet执行前后被调用。</p>
+
+<h3>ItemReadListener</h3>
+
+<p><strong>beforeRead</strong> - 在read方法执行前被调用。<br/>
+<strong>afterRead</strong> - 在read方法执行成功后被调用，并返回读到的item作为参数。<br/>
+<strong>onReadError</strong> -  在read方法出现异常时被调用，并提供异常的类型作为参数。</p>
+
+<h3>ItemProcessListener</h3>
+
+<p><strong>beforeProcess</strong> - 在ItemProcessor的process方法执行前被调用。<br/>
+<strong>afterProcess</strong> - 在process方法执行成功后被调用。<br/>
+<strong>onProcessError</strong> - 在process方法出现异常时被调用，并提供item和异常作为参数。</p>
+
+<h3>ItemWriteListener</h3>
+
+<p><strong>beforeWrite</strong> - 在ItemWriter的write方法执行前被调用。<br/>
+<strong>afterWrite</strong> - 在ItemWriter的write方法执行成功后被调用。<br/>
+<strong>onWriteError</strong> - 在ItemWriter的write方法出现异常时被调用，并提供chunk data和异常作为参数。</p>
+
+<h3>SkipListener</h3>
+
+<p><strong>onSkipInRead</strong> - 当item在读取阶段skip时被调用。 <br/>
+<strong>onSkipInProcess</strong> - 当item在process阶段skip时被调用。<br/>
+<strong>onSkipInWrite</strong> -  当item在写入阶段skip时被调用，并且在transaction被commit之前。</p>
+
+<h2>Resources</h2>
+
+<p>Official site: <a href="http://www.springsource.org/spring-batch">http://www.springsource.org/spring-batch</a></p>
+
+<p>IBM DeveloperWorks - 使用 Spring Batch 构建企业级批处理应用:<br/>
+ - <a href="http://www.ibm.com/developerworks/cn/java/j-lo-springbatch1/">http://www.ibm.com/developerworks/cn/java/j-lo-springbatch1/</a><br/>
+ - <a href="http://www.ibm.com/developerworks/cn/java/j-lo-springbatch2/">http://www.ibm.com/developerworks/cn/java/j-lo-springbatch2/</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Common Format of CSV Files]]></title>
