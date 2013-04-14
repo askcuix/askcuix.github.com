@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Chris's Blog]]></title>
   <link href="http://askcuix.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://askcuix.github.com/"/>
-  <updated>2013-04-01T23:58:34+08:00</updated>
+  <updated>2013-04-15T00:17:54+08:00</updated>
   <id>http://askcuix.github.com/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -141,6 +141,18 @@
 <p><strong>onSkipInRead</strong> - 当item在读取阶段skip时被调用。 <br/>
 <strong>onSkipInProcess</strong> - 当item在process阶段skip时被调用。<br/>
 <strong>onSkipInWrite</strong> -  当item在写入阶段skip时被调用，并且在transaction被commit之前。</p>
+
+<h3>Batch Status vs. Exit Status</h3>
+
+<p>Conditional Flow的配置中的on属性使用Exit Status，通常情况下Batch Status和Exit Status是一样的，但StepExecutionListener可以更改Exit Status。</p>
+
+<h3>Step Scope</h3>
+
+<p>使用Job和Step的属性延迟绑定特性时，必须将Bean的scope设置为step。使用该属性可以通过定义Spring Batch的namespace或者定义StepScope。</p>
+
+<p><code>xml applicationContext.xml
+   &lt;bean class="org.springframework.batch.core.scope.StepScope" /&gt;
+</code></p>
 
 <h2>Resources</h2>
 

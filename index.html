@@ -91,6 +91,66 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/04/14/korn-shell-script/">Korn Shell Script</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-14T23:45:00+08:00" pubdate data-updated="true">Apr 14<span>th</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>基本语法</h2>
+
+<p>&#8221;;&#8221;作为语句的结束，因此可以将多个command写在一行。</p>
+
+<pre><code> print -n "Name: "; read name; print ""
+</code></pre>
+
+<p>&#8220;&#92;&#8221; 可将第二行command与第一行连接起来，若command太长，可通过这种方式写在多行上。</p>
+
+<pre><code> grep filename | sort -u | awk '{print $4}' | \
+ uniq -c &gt;&gt; /longpath/file
+</code></pre>
+
+<h2>Variables</h2>
+
+<p><strong>Arrays</strong></p>
+
+<p><strong>arrname[1]=4</strong>  To fill in <br/>
+<strong>print ${arraname[1]}</strong>  To print out <br/>
+<strong>${arrname[*]}</strong>  Get all elements <br/>
+<strong>${#arrname[*]}</strong>  Get the number of elements</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/14/korn-shell-script/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/04/01/the-foundation-of-spring-batch/">The Foundation of Spring Batch</a></h1>
     
     
@@ -423,11 +483,15 @@
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 4 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 4 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/14/korn-shell-script/">Korn Shell Script</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/04/01/the-foundation-of-spring-batch/">The foundation of spring batch</a>
@@ -443,10 +507,6 @@
     
       <li class="post">
         <a href="/blog/2013/03/15/supplementary-characters-in-java/">Supplementary Characters in Java</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/10/the-syntax-of-markdown/">The syntax of markdown</a>
       </li>
     
   </ul>

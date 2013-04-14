@@ -234,6 +234,21 @@
 <strong>onSkipInProcess</strong> - 当item在process阶段skip时被调用。<br/>
 <strong>onSkipInWrite</strong> -  当item在写入阶段skip时被调用，并且在transaction被commit之前。</p>
 
+<h3>Batch Status vs. Exit Status</h3>
+
+<p>Conditional Flow的配置中的on属性使用Exit Status，通常情况下Batch Status和Exit Status是一样的，但StepExecutionListener可以更改Exit Status。</p>
+
+<h3>Step Scope</h3>
+
+<p>使用Job和Step的属性延迟绑定特性时，必须将Bean的scope设置为step。使用该属性可以通过定义Spring Batch的namespace或者定义StepScope。</p>
+
+<figure class='code'><figcaption><span>applicationContext.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>   <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.batch.core.scope.StepScope&quot;</span> <span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
 <h2>Resources</h2>
 
 <p>Official site: <a href="http://www.springsource.org/spring-batch">http://www.springsource.org/spring-batch</a></p>
@@ -289,6 +304,8 @@
         <a class="basic-alignment left" href="/blog/2013/03/26/common-format-of-csv-files/" title="Previous Post: Common Format of CSV Files">&laquo; Common Format of CSV Files</a>
       
       
+        <a class="basic-alignment right" href="/blog/2013/04/14/korn-shell-script/" title="Next Post: Korn Shell Script">Korn Shell Script &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -324,11 +341,15 @@
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 4 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 4 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/14/korn-shell-script/">Korn Shell Script</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/04/01/the-foundation-of-spring-batch/">The foundation of spring batch</a>
@@ -344,10 +365,6 @@
     
       <li class="post">
         <a href="/blog/2013/03/15/supplementary-characters-in-java/">Supplementary Characters in Java</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/10/the-syntax-of-markdown/">The syntax of markdown</a>
       </li>
     
   </ul>

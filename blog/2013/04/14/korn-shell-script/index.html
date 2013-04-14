@@ -1,0 +1,500 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Korn Shell Script - Chris's Blog</title>
+  <meta name="author" content="Chris">
+
+  
+  <meta name="description" content="korn shell script">
+  <meta name="keywords" content="Unix, Linux, Shell, Korn Shell, ksh, script">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://askcuix.github.com/blog/2013/04/14/korn-shell-script/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Chris's Blog" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39173135-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Chris's Blog</a></h1>
+  
+    <h2>Keep Walking......</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://www.google.com" id="cse-search-box">
+    <fieldset role="search">
+      <input class="search" type="text" name="q" results="0"/>
+      <input type="hidden" name="cx" value="010330911247007516125:lvfpiqfzfs8" />
+      <input type="hidden" name="ie" value="UTF-8" />
+    </fieldset>
+</form>
+  
+  <script type="text/javascript">
+  (function() {
+    var job = document.createElement('script'); job.type = 'text/javascript'; job.async = true;
+    job.src = 'http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en';
+    var ss = document.getElementsByTagName('script'), s=ss[ss.length-1]; s.parentNode.insertBefore(job, s); s=null;
+  })();
+  </script>
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Korn Shell Script</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-14T23:45:00+08:00" pubdate data-updated="true">Apr 14<span>th</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>基本语法</h2>
+
+<p>&#8221;;&#8221;作为语句的结束，因此可以将多个command写在一行。</p>
+
+<pre><code> print -n "Name: "; read name; print ""
+</code></pre>
+
+<p>&#8220;&#92;&#8221; 可将第二行command与第一行连接起来，若command太长，可通过这种方式写在多行上。</p>
+
+<pre><code> grep filename | sort -u | awk '{print $4}' | \
+ uniq -c &gt;&gt; /longpath/file
+</code></pre>
+
+<h2>Variables</h2>
+
+<p><strong>Arrays</strong></p>
+
+<p><strong>arrname[1]=4</strong>  To fill in <br/>
+<strong>print ${arraname[1]}</strong>  To print out <br/>
+<strong>${arrname[*]}</strong>  Get all elements <br/>
+<strong>${#arrname[*]}</strong>  Get the number of elements</p>
+
+<!-- more -->
+
+
+<h2>Branching</h2>
+
+<p><strong>if</strong></p>
+
+<pre><code> if [[ $value -eq 7 ]]   
+
+ then   
+    print "$value is 7"   
+ fi
+</code></pre>
+
+<p><strong>if … else</strong></p>
+
+<pre><code> if [[ $name = "John" ]]
+ then
+    print "Your welcome, ${name}."
+ else
+    print "Good bye, ${name}!"
+ fi
+</code></pre>
+
+<p><strong>if &#8230; elif &#8230; else</strong></p>
+
+<pre><code> if [[ $name = "John" ]]
+ then
+    print "Your welcome, ${name}."
+ elif [[ $name = "Hanna" ]]
+ then
+    print "Hello, ${name}, who are you?"
+ else
+    print "Good bye, ${name}!"
+ fi
+</code></pre>
+
+<p><strong>case</strong></p>
+
+<pre><code> case $var in
+   john|fred)  print $invitation;;
+   martin)  print $declination;;
+   *)  print "Wrong name…";;
+ esac
+</code></pre>
+
+<h2>Looping</h2>
+
+<p><strong>while</strong></p>
+
+<pre><code> while [[ $count -gt 0 ]];do
+    print "\$count is $count"
+    (( count -= 1 ))
+ done
+</code></pre>
+
+<p><strong>until</strong></p>
+
+<pre><code> until [[ $answer = "yes" ]];do
+    print -n "Please enter \"yes\": "
+    read answer
+    print ""
+ done
+</code></pre>
+
+<p><strong>for</strong></p>
+
+<pre><code> for foo in $(ls);do
+    if [[ -d $foo ]];then
+       print "$foo is a directory"
+    else
+       print "$foo is not a directory"
+    fi
+ done
+</code></pre>
+
+<p><strong>continue</strong></p>
+
+<pre><code> while read line
+ do
+   if [[ $line = *.gz ]];then
+      continue
+   else
+      print $line
+   fi
+ done
+</code></pre>
+
+<p><strong>break</strong></p>
+
+<pre><code> while read line;do
+     if [[ $line = *!(.c) ]];then
+        break
+     else
+        print $line
+     fi
+ done
+</code></pre>
+
+<h2>Comparisons</h2>
+
+<p><strong>字符比较</strong>：&#8221;=&#8221;用于相等，&#8221;!=&#8221;用于不等。 <br/>
+<strong>数字比较</strong>：&#8221;-eq&#8221;用于相等，&#8221;-ne&#8221;用于不等，&#8221;-gt&#8221;用于大于，&#8221;-lt&#8221;用于小于。 <br/>
+<strong>与或比较</strong>：&#8221;&amp;&amp;&#8221;表示与，&#8221;||&#8221;表示或。</p>
+
+<h2>变量操作</h2>
+
+<p><strong>${name##*/}</strong>：用于从包含路径的变量中取出文件名。  <br/>
+<strong>${name%/*}</strong>：用于从包含路径的变量中取出路径。  <br/>
+<strong>dirname</strong>：用于获取文件的路径，不包含文件名。如：dirname $0 <br/>
+<strong>${foo:-4}</strong>：如果foo不存在，则返回4，但foo仍然没有值。  <br/>
+<strong>${foo:=4}</strong>：如果foo不存在，则附值4给foo。  <br/>
+<strong>${foo:+1}</strong>：如果foo有值，则返回1，但foo的值不改变。  <br/>
+<strong>${foo:?&#8221;foo not set!&#8221;}</strong>：如果foo不存在，则退出程序并显示&#8221;foo not set!&#8221;。 <br/>
+<strong>${foo:startOffset}</strong>：从startOffset处开始截取字符串foo到末尾。 <br/>
+<strong>${foo:startOffset:endOffset}</strong>：截取字符串foo从startOffset到endOffset。</p>
+
+<h2>特殊变量</h2>
+
+<p><strong>$#</strong>：命令行参数的个数。 <br/>
+<strong>$1, &#8230;.$n</strong>：单个命令行参数。 <br/>
+<strong>$*</strong>：所有的命令行参数。  <br/>
+<strong>$0</strong>：当前script的名字，如果是从另外一个目录执行的，还将包含路径信息。  <br/>
+<strong>$?</strong>：上个command执行结果的状态。 <br/>
+<strong>$$</strong>：当前script的pid。  <br/>
+<strong>$!</strong>：最后一个后台执行的程序的pid。 <br/>
+<strong>shift</strong>：删除第一个命令行参数。</p>
+
+<h2>数据重定向</h2>
+
+<p><strong>command > file</strong>：将输出写到新文件或覆盖已存在的文件。 <br/>
+<strong>command >> file</strong>：将输出添加在已存在文件中。 <br/>
+<strong>command 2> file</strong>：将错误输出重定向到文件。 <br/>
+<strong>command 2>/dev/null</strong>：丢弃错误信息。  <br/>
+<strong>command 2>&amp;1</strong>：将错误输出重定向到正常输出。  <br/>
+<strong>command &lt; file</strong>：从标准输入读取文件。  <br/>
+<strong>command &lt; infile > outfile</strong>：组合输入和输出重定向。</p>
+
+<h2>Read Input from User and from Files</h2>
+
+<p><strong>read var</strong>：读取用户输入的变量。如：</p>
+
+<pre><code> print -n "Enter your favorite haircolor: ";read var; print ""。
+</code></pre>
+
+<p><strong>按行读取文件的内容到变量</strong>：</p>
+
+<pre><code> { while read myeline;do
+      # process $myline
+ done } &lt; filename
+</code></pre>
+
+<h2>Calculation</h2>
+
+<p>简单的计算可通过 &#8220;let&#8221; 或  (( … ))。如：(( a+=1 )) 或 let a+=1。</p>
+
+<h2>typeset用法</h2>
+
+<p>typeset用于设置变量属性，如大小写、宽度、左右对齐等都可以用typeset来控制, 当用typeset改变一个变量的属性时,这种改变是永久的。</p>
+
+<p>选项：</p>
+
+<p><strong>-u</strong>：将一个变量的字符变成大写。  <br/>
+<strong>-l</strong>：将一个变量的字符变成小写。  <br/>
+<strong>-L<num></strong>：将变量变成一个左对齐的num长度的字符串，有些像字符串截取。 <br/>
+<strong>-R<num></strong>：将变量变成一个右对齐的num长度的字符串。 <br/>
+<strong>-Z<num></strong>：将变量变成一个空格填充，占num个字符位的字符串。 <br/>
+<strong>-i</strong>：强制变量为一个整数。 <br/>
+<strong>-r</strong>：设置一个只读变量。</p>
+
+<p>文件状态测试</p>
+
+<p><strong>-b filename</strong>：当filename 存在并且是块文件时返回真。 <br/>
+<strong>-c filename</strong>：当filename 存在并且是字符文件时返回真。 <br/>
+<strong>-d pathname</strong>：当pathname 存在并且是一个目录时返回真。 <br/>
+<strong>-e pathname</strong>：当由pathname 指定的文件或目录存在时返回真。 <br/>
+<strong>-f filename</strong>：当filename 存在并且是正规文件时返回真。 <br/>
+<strong>-h filename</strong>：当filename 存在并且是符号链接文件时返回真。 <br/>
+<strong>-r pathname</strong>：当由pathname 指定的文件或目录存在并且可读时返回真。 <br/>
+<strong>-s filename</strong>：当filename 存在并且文件大小大于0 时返回真。 <br/>
+<strong>-w pathname</strong>：当由pathname 指定的文件或目录存在并且可写时返回真。 <br/>
+<strong>-x pathname</strong>：当由pathname 指定的文件或目录存在并且可执行时返回真。 <br/>
+<strong>-O pathname</strong>：当由pathname 存在并且被当前进程的有效用户id 的用户拥有时返回真。 <br/>
+<strong>-G pathname</strong>：当由pathname 存在并且属于当前进程的有效用户id 的用户的用户组时返回真。 <br/>
+<strong>file1 -nt file2</strong>：file1 比file2 新时返回真。 <br/>
+<strong>file1 -ot file2</strong>：file1 比file2 旧时返回真。</p>
+
+<h2>字符串测试</h2>
+
+<p><strong>-z string</strong>：字符串string 为空串(长度为0)时返回真。 <br/>
+<strong>-n string</strong>：字符串string 为非空串时返回真。</p>
+
+<h2>Resources</h2>
+
+<p><strong>Korn Shell Programming</strong>：<a href="http://www.bo.infn.it/alice/alice-doc/mll-doc/impgde/node15.html">http://www.bo.infn.it/alice/alice-doc/mll-doc/impgde/node15.html</a> <br/>
+<strong>Learning the Korn Shell</strong>: <a href="http://docstore.mik.ua/orelly/unix/ksh/">http://docstore.mik.ua/orelly/unix/ksh/</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Chris</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-14T23:45:00+08:00" pubdate data-updated="true">Apr 14<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>Linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/01/the-foundation-of-spring-batch/" title="Previous Post: The foundation of spring batch">&laquo; The foundation of spring batch</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <img src="/images/chris.png" width="128" height="178" alt="Chris">
+  <p>
+	  <a href="/about">Chris</a> <br/>
+      Java Developer, @Guangzhou
+  </p>
+</section>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/askcuix@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 4 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/14/korn-shell-script/">Korn Shell Script</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/01/the-foundation-of-spring-batch/">The foundation of spring batch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/26/common-format-of-csv-files/">Common Format of CSV Files</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/26/the-runtime-memory-of-jvm/">JVM运行时内存区域</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/15/supplementary-characters-in-java/">Supplementary Characters in Java</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Links</h1>
+    <ul>
+    	<li><a href="http://askcuix.appspot.com" target="_blank">Chris @GAE</a></li>
+		<li><a href="https://github.com/askcuix" target="_blank">Chris @GitHub</a></li>
+		<li><a href="http://mindon.github.com" target="_blank">Mindon.IDEA</a></li>
+		<li><a href="http://aleung.github.com/blog/" target="_blank">Good good study, day day up</a></li>
+    </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Chris -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'askcuix';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://askcuix.github.com/blog/2013/04/14/korn-shell-script/';
+        var disqus_url = 'http://askcuix.github.com/blog/2013/04/14/korn-shell-script/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+</body>
+</html>
