@@ -4,7 +4,7 @@
   <title><![CDATA[Chris's Blog]]></title>
   <link href="http://askcuix.github.com/atom.xml" rel="self"/>
   <link href="http://askcuix.github.com/"/>
-  <updated>2013-04-15T00:17:54+08:00</updated>
+  <updated>2013-04-17T00:01:35+08:00</updated>
   <id>http://askcuix.github.com/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -12,6 +12,115 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[垃圾收集器及内存分配]]></title>
+    <link href="http://askcuix.github.com/blog/2013/04/16/garbage-collection-and-memory-allocation/"/>
+    <updated>2013-04-16T23:54:00+08:00</updated>
+    <id>http://askcuix.github.com/blog/2013/04/16/garbage-collection-and-memory-allocation</id>
+    <content type="html"><![CDATA[<p>程序计数器、虚拟机栈和本地方法栈的内存分配大体在编译器就可以确定，并且这些区域和线程有着相同的生命周期，在方法或线程结束时，内存也就回收了。而Java堆和方法区的内存分配和回收都是动态的，只有在程序运行期间才知道会创建哪些对象，因此是垃圾收集器所关注的内存区域。</p>
+
+<h2>对象标记算法</h2>
+
+<p>Java堆中存放着所有对象实例，垃圾收集器在进行回收前，需要根据算法来确定哪些对象已不再被使用，可进行回收。</p>
+
+<h3>引用计数算法</h3>
+
+<p>该算法是给对象添加一个引用计数器，每当有引用它时，计数器就加1；当引用失效时，计数器就减1；当计数器为0时就不能被使用了。这种算法的判定效率很高，但是很难解决Java对象之间的循环引用问题，因此未被Java语言采用。</p>
+
+<h3>根搜索算法</h3>
+
+<p>通过一系列的名为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象当GC Roots没有任何引用链相连时，则此对象就不能被使用了。</p>
+
+<p>可作为GC Roots的对象包括：
+- 虚拟机栈中的局部变量表所引用的对象。 <br/>
+- 方法区中的类静态属性引用的对象。  <br/>
+- 方法区中的常量引用的对象。 <br/>
+- 本地方法栈中JNI所引用的对象。</p>
+
+<!-- more -->
+
+
+<h2>Java引用</h2>
+
+<p><strong>强引用</strong>：在代码中普遍存在的，比如“Object obj = new Object()”，只要强引用还存在，垃圾收集器则永远都不会回收引用的对象。</p>
+
+<p><strong>软引用</strong>：一些还有用，但并非必须的对象。对于软引用关联的对象，在发生内存溢出之前，会将这些对象纳入回收范围并进行回收。</p>
+
+<p><strong>弱引用</strong>：非必须对象，比软引用更弱一些，弱引用所关联的对象只能生存到下一次垃圾回收之前。当垃圾收集器工作时，无论当前内存是否够用，都会回收弱引用所关联的对象。</p>
+
+<p><strong>虚引用</strong>：最弱的一种引用关系，一个对象是否被虚引用所关联，完全不会对其生存时间产生影响，也不能通过虚引用来取得对象实例，关联的唯一目的是在这个对象被垃圾回收器回收时收到一个系统通知。</p>
+
+<h2>垃圾收集算法</h2>
+
+<h3>标记-清除算法</h3>
+
+<p>首先标记出所有需要回收的对象，之后统一回收所有被标记的对象。该算法效率较低，并会产生大量不连续的内存碎片。</p>
+
+<h3>复制算法</h3>
+
+<p>将新生代内存分为一块较大的Eden空间和两块较小的Survivor空间，每次使用Eden和其中一块Survivor，回收时将Eden和使用的Survivor中存活的对象一次性拷贝到另一块Survivor空间，然后清理Eden和之前使用的Survivor空间。</p>
+
+<p>HotSpot虚拟机默认Eden和Survivor的大小比例是8:1，因此新生代中可用内存为整个新生代容量的90%。当Survivor空间不够用时，将依赖老年代内存进行分配担保。</p>
+
+<h3>标记-整理算法</h3>
+
+<p>与标记-清除算法类似，但最后步骤不是直接对可回收对象进行清除，而是将所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。</p>
+
+<h3>分代收集算法</h3>
+
+<p>将Java堆分为新生代和老年代，对每个年代采用合适的收集算法。</p>
+
+<h2>垃圾收集器</h2>
+
+<h3>Serial收集器</h3>
+
+<p>单线程新生代收集器，在进行垃圾收集时，必须暂停所有的工作线程，导致停顿。与其它收集器的单线程相比简单高效，对于单CPU的环境没有线程交互的开销，收集效率较高。</p>
+
+<h3>ParNew收集器</h3>
+
+<p>新生代收集器，Serial收集器的多线程版本，是目前除Serial收集器外，唯一能够和CMS收集器配合工作的。默认开启的收集线程数与CPU的数量相同，可通过-XX:ParallelGCThreads来限制线程数。</p>
+
+<p>ParNew收集器是使用-XX:+UseConcMarkSweepGC后的默认新生代收集器，也可以使用-XX:+UseParNewGC来强制指定。</p>
+
+<h3>Parallel Scavenge收集器</h3>
+
+<p>新生代收集器，以达到可控制的吞吐量为目标。可通过-XX:MaxGCPauseMillis来控制最大垃圾收集停顿时间，-XX:GCTimeRatio来控制吞吐量大小，-XX:+UseAdaptiveSizePolicy来实现自适应调节策略。</p>
+
+<h3>Serial Old收集器</h3>
+
+<p>Serial收集器的老年代版本。可在JDK1.5及之前版本中配合Parallel Scavenge收集器使用，也可在CMS收集器发生Concurrent Mode Failure时使用。</p>
+
+<h3>Parallel Old收集器</h3>
+
+<p>Parallel Scavenge收集器的老年代版本。使用多线程和“标记-整理”算法，在JDK1.6中开始提供。和Parallel Scavenge收集器配合使用非常适合注重吞吐量和CPU资源有限的场景。</p>
+
+<h3>CMS（Concurrent Mark Sweep）收集器</h3>
+
+<p>老年代收集器，以获取最短回收停顿时间为目标。默认启动的收集线程数是 (CPU数量+3) / 4。在并发阶段因占用一部分线程而导致应用程序变慢，总吞吐量下降。CMS收集器默认在老年代使用68%的空间后被激活，可通过调高-XX:CMSInitiatingOccupancyFraction来提高触发百分比，以降低内存回收次数。</p>
+
+<p>若CMS运行期间预留的内存无法满足程序需要，就会出现“Concurrent Mode Failure”失败，虚拟机会临时启用Serial Old收集器来重新进行老年代的垃圾收集。</p>
+
+<p>由于使用“标记-清除”算法会产生大量空间碎片，从而导致Full GC，可通过-XX:+UseCMSCompactAtFullCollection在Full GC后进行碎片整理。</p>
+
+<h3>G1收集器</h3>
+
+<p>使用“标记-整理”算法避免产生空间碎片，可以精确控制垃圾收集的时间。通过将整个Java堆划分为多个大小固定的独立区域，每次根据允许的收集时间，优先回收垃圾最多的区域，以此来保证在有限的时间内获取最高的收集效率。</p>
+
+<h2>内存分配</h2>
+
+<p>对象通常在新生代Eden区中分配，当Eden区没有足够空间时，将触发一次Minor GC。</p>
+
+<p>需要大量连续内存的大对象将直接在老年代中分配，以避免新生代中发生大量的内存拷贝，可通过-XX:PretenureSizeThreshold来设置。</p>
+
+<p>虚拟机为每个对象定义了年龄计数器，并通过Minor GC的次数来增加年龄，当达到-XX:MaxTenuringThreshold设置的阀值时，会将对象移入老年代。</p>
+
+<p>若新生代中Survivor空间中相同年龄的对象大小总和大于Survivor空间的一半，则年龄大于或等于该年龄的对象可以直接进入老年代。</p>
+
+<p><strong>新生代GC（Minor GC）</strong>：新生代的垃圾回收操作，Java对象的生命周期通常较短，因此Minor GC非常频繁。
+<strong>老年代GC（Major GC / Full GC）</strong>：老年代的垃圾回收操作，发生Full GC通常也会发生至少一次的Minor GC，GC的速度很慢。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Korn Shell Script]]></title>
