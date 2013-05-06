@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Chris's Blog]]></title>
   <link href="http://askcuix.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://askcuix.github.com/"/>
-  <updated>2013-04-17T00:01:35+08:00</updated>
+  <updated>2013-05-06T23:25:00+08:00</updated>
   <id>http://askcuix.github.com/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -12,6 +12,120 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Spring NamedParameterJdbcTemplate的内存泄漏问题]]></title>
+    <link href="http://askcuix.github.com/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/"/>
+    <updated>2013-05-06T22:36:00+08:00</updated>
+    <id>http://askcuix.github.com/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate</id>
+    <content type="html"><![CDATA[<p>我们的项目是使用Spring JDBC来操作DB的，通常是直接使用SimpleJdbcTemplate，一直以来也没发现什么问题。今天在做performance test的时候，发现内存增长很快，甚至出现了out of memory。把heap dump拉下来查看后，发现是这次新加的一个service出现了问题，但根源是因为NamedParameterJdbcTemplate中的HashMap导致的。</p>
+
+<p>这里要先说明使用的Spring的版本是2.5.6，在3.0.3中已修复该问题。</p>
+
+<!-- more -->
+
+
+<p>查看调用的trace是service->SimpleJdbcTemplate->NamedParameterJdbcTemplate。一直没有仔细看过SimpleJdbcTemplate的源码，其实它基本都是通过调用NamedParameterJdbcTemplate来完成操作的。SimpleJdbcTemplate的初始化，其实就是初始化NamedParameterJdbcTemplate。</p>
+
+<p>``` java SimpleJdbcTemplate.java
+   public SimpleJdbcTemplate(DataSource dataSource) {</p>
+
+<pre><code>    this.namedParameterJdbcOperations = new NamedParameterJdbcTemplate(dataSource);
+</code></pre>
+
+<p>   }</p>
+
+<p>   public SimpleJdbcTemplate(JdbcOperations classicJdbcTemplate) {</p>
+
+<pre><code>    this.namedParameterJdbcOperations = new NamedParameterJdbcTemplate(classicJdbcTemplate);
+</code></pre>
+
+<p>   }</p>
+
+<p>   public SimpleJdbcTemplate(NamedParameterJdbcOperations namedParameterJdbcTemplate) {</p>
+
+<pre><code>    this.namedParameterJdbcOperations = namedParameterJdbcTemplate;
+</code></pre>
+
+<p>   }
+```</p>
+
+<p>NamedParameterJdbcTemplate的作用是方便使用命名式的参数，以代替使用SQL中的‘?’。NamedParameterJdbcTemplate会将每次解析过后的SQL放在一个HashMap中，以起到cache的作用，而问题就出现这个Map上。</p>
+
+<p>``` java NamedParameterJdbcTemplate.java
+   private final Map parsedSqlCache = new HashMap();</p>
+
+<p>   protected ParsedSql getParsedSql(String sql) {</p>
+
+<pre><code>    synchronized (this.parsedSqlCache) {
+        ParsedSql parsedSql = (ParsedSql) this.parsedSqlCache.get(sql);
+        if (parsedSql == null) {
+            parsedSql = NamedParameterUtils.parseSqlStatement(sql);
+            this.parsedSqlCache.put(sql, parsedSql);
+        }
+        return parsedSql;
+    }
+}
+</code></pre>
+
+<p>```</p>
+
+<p>从上面的代码可以看到，NamedParameterJdbcTemplate不断的将解析过的SQL放入parsedSqlCache中，但并没有任何限制，而我们的service会根据不同的条件产生不同的SQL（条件参数比较多），同时这个SimpleJdbcTemplate也是share的，因此出现了out of memory的问题，当然，测试server的配置比较差也是其中一个原因。</p>
+
+<p>这个问题可以参见<a href="https://jira.springsource.org/browse/SPR-7237">Spring Bug 7237</a>，该问题已在3.0.3中修复。</p>
+
+<p>由于该阶段已不可能升级Spring的版本，潜在的风险太大，因此可自己实现一个NamedParameterJdbcTemplate，去override掉getParsedSql方法，可取消cache的作用，或参考Spring 3中的实现。</p>
+
+<p>``` java NamedParameterJdbcTemplate.java
+   public static final int DEFAULT_CACHE_LIMIT = 256;</p>
+
+<p>   private volatile int cacheLimit = DEFAULT_CACHE_LIMIT;</p>
+
+<p>   private final Map&lt;String, ParsedSql> parsedSqlCache =</p>
+
+<pre><code>        new LinkedHashMap&lt;String, ParsedSql&gt;(DEFAULT_CACHE_LIMIT, 0.75f, true) {
+  @Override
+  protected boolean removeEldestEntry(Map.Entry&lt;String, ParsedSql&gt; eldest) {
+        return size() &gt; getCacheLimit();
+  }
+};
+</code></pre>
+
+<p>   public void setCacheLimit(int cacheLimit) {</p>
+
+<pre><code>    this.cacheLimit = cacheLimit;
+</code></pre>
+
+<p>   }</p>
+
+<p>   public int getCacheLimit() {</p>
+
+<pre><code>    return this.cacheLimit;
+</code></pre>
+
+<p>   }</p>
+
+<p>   protected ParsedSql getParsedSql(String sql) {</p>
+
+<pre><code>    if (getCacheLimit() &lt;= 0) {
+        return NamedParameterUtils.parseSqlStatement(sql);
+    }
+    synchronized (this.parsedSqlCache) {
+        ParsedSql parsedSql = this.parsedSqlCache.get(sql);
+        if (parsedSql == null) {
+            parsedSql = NamedParameterUtils.parseSqlStatement(sql);
+            this.parsedSqlCache.put(sql, parsedSql);
+        }
+        return parsedSql;
+    }
+</code></pre>
+
+<p>   }
+```</p>
+
+<p>然后更改一下SimpleJdbcTemplate的实例化方式，先实例化一个改写过的NamedParameterJdbcTemplate，然后作为SimpleJdbcTemplate构造函数的参数来进行实例化。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[垃圾收集器及内存分配]]></title>
@@ -351,32 +465,6 @@
 <li><p>指针访问</p>
 
 <p>Java栈中对象引用存储的就是对象的地址。这种方法的访问速度更快，节省了一次指针定位的开销。</p></li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Supplementary Characters in Java]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/15/supplementary-characters-in-java/"/>
-    <updated>2013-03-15T23:37:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/15/supplementary-characters-in-java</id>
-    <content type="html"><![CDATA[<p>工作中经常会涉及到文件处理，而fixlength类型的文件又是一种很常见的格式。众所周知，fixlength类型的数据就是每个字段对应一行数据中固定长度的字符，每个字段都有对应的start offset和end offset，用实现来表示就是String.substring(start, end)，所以start和end的位置是至关重要的，一个字段对应错了，后面的字段就全错了。</p>
-
-<p>在Java中使用UTF-16来表示unicode字符，一个字符就是16 bit，像String.length()就是返回有多少个16 bit。unicode支持的字符的code point范围是U+0000到U+10FFFF，这其中包括基本字符（BMP）和补充字符（supplementary character），基本字符时从U+0000到U+FFFF，补充字符从U+10000到U+10FFFF。<!-- more -->在UTF-16编码中，基本字符占用一个16 bit，而补充字符占用两个16 bit。这样Java String的很多方法就会出现问题了，当然也包括上面提到的substring和length。那么如果fixlength文件中含有补充字符，则会导致字段map错误。</p>
-
-<p>那现在来看如何解决这个问题，一个解决办法是对字符串做Base64编码，编码之后的字符都是单个16 bit了。但是这有两个弊端，一是Base64之后会使数据变大，有时我们会将这些fixlength的数据作为JMS Message，对于这种情况，数据变大是不建议的；另一个问题是Base64操作的CPU消耗会比较大，会影响到performance。因此虽然这种方法可以解决问题，但是不推荐。</p>
-
-<p>另一个解决办法是使用IBM的ICU4J，这个API提供了很多国际化相关的工具类，使用它来重新实现我们用到的String方法，这里可以参考我写的一个工具类<a href="https://github.com/askcuix/easeframe/blob/master/modules/core/src/main/java/com/easeframe/core/lang/Unicode.java">Unicode</a>。</p>
-
-<p>因为我们一直用Spring Batch来处理文件，便查阅了一下源码看有没有考虑到supplementary character的问题，结果这个问题也被忽视了，看来supplementary character的使用还是比较少，但如果系统需要支持多语言的环境，还是自己处理一下比较好，之后我会重写一个Spring Batch的FixLengthItemWriter，增加对supplementary character的支持。</p>
-
-<p>这里有一些资源可供参考：</p>
-
-<ul>
-<li><a href="http://www.unicode.org">unicode.org</a></li>
-<li><a href="http://www.oracle.com/technetwork/articles/javase/supplementary-142654.html">Supplementary Characters in the Java Platform</a></li>
-<li><a href="http://docs.oracle.com/javase/tutorial/i18n/text/index.html">Working with Text</a></li>
 </ul>
 
 ]]></content>

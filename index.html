@@ -91,6 +91,48 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/">Spring NamedParameterJdbcTemplate的内存泄漏问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-06T22:36:00+08:00" pubdate data-updated="true">May 6<span>th</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我们的项目是使用Spring JDBC来操作DB的，通常是直接使用SimpleJdbcTemplate，一直以来也没发现什么问题。今天在做performance test的时候，发现内存增长很快，甚至出现了out of memory。把heap dump拉下来查看后，发现是这次新加的一个service出现了问题，但根源是因为NamedParameterJdbcTemplate中的HashMap导致的。</p>
+
+<p>这里要先说明使用的Spring的版本是2.5.6，在3.0.3中已修复该问题。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/04/16/garbage-collection-and-memory-allocation/">垃圾收集器及内存分配</a></h1>
     
     
@@ -541,11 +583,15 @@
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 5 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 6 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/">Spring NamedParameterJdbcTemplate的内存泄漏问题</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/04/16/garbage-collection-and-memory-allocation/">垃圾收集器及内存分配</a>
@@ -561,10 +607,6 @@
     
       <li class="post">
         <a href="/blog/2013/03/26/common-format-of-csv-files/">Common Format of CSV Files</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/26/the-runtime-memory-of-jvm/">JVM运行时内存区域</a>
       </li>
     
   </ul>

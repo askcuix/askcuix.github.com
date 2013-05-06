@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Spring NamedParameterJdbcTemplate的内存泄漏问题 - Chris's Blog</title>
+  <meta name="author" content="Chris">
+
+  
+  <meta name="description" content="The memory leak problem of spring NamedParameterJdbcTemplate">
+  <meta name="keywords" content="java, memory, leak, spring, NamedParameterJdbcTemplate">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://askcuix.github.com/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Chris's Blog" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39173135-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Chris's Blog</a></h1>
+  
+    <h2>Keep Walking......</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://www.google.com" id="cse-search-box">
+    <fieldset role="search">
+      <input class="search" type="text" name="q" results="0"/>
+      <input type="hidden" name="cx" value="010330911247007516125:lvfpiqfzfs8" />
+      <input type="hidden" name="ie" value="UTF-8" />
+    </fieldset>
+</form>
+  
+  <script type="text/javascript">
+  (function() {
+    var job = document.createElement('script'); job.type = 'text/javascript'; job.async = true;
+    job.src = 'http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en';
+    var ss = document.getElementsByTagName('script'), s=ss[ss.length-1]; s.parentNode.insertBefore(job, s); s=null;
+  })();
+  </script>
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Spring NamedParameterJdbcTemplate的内存泄漏问题</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-06T22:36:00+08:00" pubdate data-updated="true">May 6<span>th</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>我们的项目是使用Spring JDBC来操作DB的，通常是直接使用SimpleJdbcTemplate，一直以来也没发现什么问题。今天在做performance test的时候，发现内存增长很快，甚至出现了out of memory。把heap dump拉下来查看后，发现是这次新加的一个service出现了问题，但根源是因为NamedParameterJdbcTemplate中的HashMap导致的。</p>
+
+<p>这里要先说明使用的Spring的版本是2.5.6，在3.0.3中已修复该问题。</p>
+
+<!-- more -->
+
+
+<p>查看调用的trace是service->SimpleJdbcTemplate->NamedParameterJdbcTemplate。一直没有仔细看过SimpleJdbcTemplate的源码，其实它基本都是通过调用NamedParameterJdbcTemplate来完成操作的。SimpleJdbcTemplate的初始化，其实就是初始化NamedParameterJdbcTemplate。</p>
+
+<figure class='code'><figcaption><span>SimpleJdbcTemplate.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>   <span class="kd">public</span> <span class="nf">SimpleJdbcTemplate</span><span class="o">(</span><span class="n">DataSource</span> <span class="n">dataSource</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">namedParameterJdbcOperations</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NamedParameterJdbcTemplate</span><span class="o">(</span><span class="n">dataSource</span><span class="o">);</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">public</span> <span class="nf">SimpleJdbcTemplate</span><span class="o">(</span><span class="n">JdbcOperations</span> <span class="n">classicJdbcTemplate</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">namedParameterJdbcOperations</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NamedParameterJdbcTemplate</span><span class="o">(</span><span class="n">classicJdbcTemplate</span><span class="o">);</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">public</span> <span class="nf">SimpleJdbcTemplate</span><span class="o">(</span><span class="n">NamedParameterJdbcOperations</span> <span class="n">namedParameterJdbcTemplate</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">namedParameterJdbcOperations</span> <span class="o">=</span> <span class="n">namedParameterJdbcTemplate</span><span class="o">;</span>
+</span><span class='line'>   <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>NamedParameterJdbcTemplate的作用是方便使用命名式的参数，以代替使用SQL中的‘?’。NamedParameterJdbcTemplate会将每次解析过后的SQL放在一个HashMap中，以起到cache的作用，而问题就出现这个Map上。</p>
+
+<figure class='code'><figcaption><span>NamedParameterJdbcTemplate.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>   <span class="kd">private</span> <span class="kd">final</span> <span class="n">Map</span> <span class="n">parsedSqlCache</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">protected</span> <span class="n">ParsedSql</span> <span class="nf">getParsedSql</span><span class="o">(</span><span class="n">String</span> <span class="n">sql</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">parsedSqlCache</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">ParsedSql</span> <span class="n">parsedSql</span> <span class="o">=</span> <span class="o">(</span><span class="n">ParsedSql</span><span class="o">)</span> <span class="k">this</span><span class="o">.</span><span class="na">parsedSqlCache</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">sql</span><span class="o">);</span>
+</span><span class='line'>          <span class="k">if</span> <span class="o">(</span><span class="n">parsedSql</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>              <span class="n">parsedSql</span> <span class="o">=</span> <span class="n">NamedParameterUtils</span><span class="o">.</span><span class="na">parseSqlStatement</span><span class="o">(</span><span class="n">sql</span><span class="o">);</span>
+</span><span class='line'>              <span class="k">this</span><span class="o">.</span><span class="na">parsedSqlCache</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">sql</span><span class="o">,</span> <span class="n">parsedSql</span><span class="o">);</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>          <span class="k">return</span> <span class="n">parsedSql</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>从上面的代码可以看到，NamedParameterJdbcTemplate不断的将解析过的SQL放入parsedSqlCache中，但并没有任何限制，而我们的service会根据不同的条件产生不同的SQL（条件参数比较多），同时这个SimpleJdbcTemplate也是share的，因此出现了out of memory的问题，当然，测试server的配置比较差也是其中一个原因。</p>
+
+<p>这个问题可以参见<a href="https://jira.springsource.org/browse/SPR-7237">Spring Bug 7237</a>，该问题已在3.0.3中修复。</p>
+
+<p>由于该阶段已不可能升级Spring的版本，潜在的风险太大，因此可自己实现一个NamedParameterJdbcTemplate，去override掉getParsedSql方法，可取消cache的作用，或参考Spring 3中的实现。</p>
+
+<figure class='code'><figcaption><span>NamedParameterJdbcTemplate.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>   <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">DEFAULT_CACHE_LIMIT</span> <span class="o">=</span> <span class="mi">256</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">private</span> <span class="kd">volatile</span> <span class="kt">int</span> <span class="n">cacheLimit</span> <span class="o">=</span> <span class="n">DEFAULT_CACHE_LIMIT</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">private</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">ParsedSql</span><span class="o">&gt;</span> <span class="n">parsedSqlCache</span> <span class="o">=</span>
+</span><span class='line'>          <span class="k">new</span> <span class="n">LinkedHashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">ParsedSql</span><span class="o">&gt;(</span><span class="n">DEFAULT_CACHE_LIMIT</span><span class="o">,</span> <span class="mf">0.75f</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">removeEldestEntry</span><span class="o">(</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">ParsedSql</span><span class="o">&gt;</span> <span class="n">eldest</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nf">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">getCacheLimit</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCacheLimit</span><span class="o">(</span><span class="kt">int</span> <span class="n">cacheLimit</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">cacheLimit</span> <span class="o">=</span> <span class="n">cacheLimit</span><span class="o">;</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getCacheLimit</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">cacheLimit</span><span class="o">;</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'>  
+</span><span class='line'>   <span class="kd">protected</span> <span class="n">ParsedSql</span> <span class="nf">getParsedSql</span><span class="o">(</span><span class="n">String</span> <span class="n">sql</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">getCacheLimit</span><span class="o">()</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="n">NamedParameterUtils</span><span class="o">.</span><span class="na">parseSqlStatement</span><span class="o">(</span><span class="n">sql</span><span class="o">);</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>      <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">parsedSqlCache</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">ParsedSql</span> <span class="n">parsedSql</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">parsedSqlCache</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">sql</span><span class="o">);</span>
+</span><span class='line'>          <span class="k">if</span> <span class="o">(</span><span class="n">parsedSql</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>              <span class="n">parsedSql</span> <span class="o">=</span> <span class="n">NamedParameterUtils</span><span class="o">.</span><span class="na">parseSqlStatement</span><span class="o">(</span><span class="n">sql</span><span class="o">);</span>
+</span><span class='line'>              <span class="k">this</span><span class="o">.</span><span class="na">parsedSqlCache</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">sql</span><span class="o">,</span> <span class="n">parsedSql</span><span class="o">);</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>          <span class="k">return</span> <span class="n">parsedSql</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>   <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后更改一下SimpleJdbcTemplate的实例化方式，先实例化一个改写过的NamedParameterJdbcTemplate，然后作为SimpleJdbcTemplate构造函数的参数来进行实例化。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Chris</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-06T22:36:00+08:00" pubdate data-updated="true">May 6<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>Java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/16/garbage-collection-and-memory-allocation/" title="Previous Post: 垃圾收集器及内存分配">&laquo; 垃圾收集器及内存分配</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <img src="/images/chris.png" width="128" height="178" alt="Chris">
+  <p>
+	  <a href="/about">Chris</a> <br/>
+      Java Developer, @Guangzhou
+  </p>
+</section>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/askcuix@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 6 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/">Spring NamedParameterJdbcTemplate的内存泄漏问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/16/garbage-collection-and-memory-allocation/">垃圾收集器及内存分配</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/14/korn-shell-script/">Korn Shell Script</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/01/the-foundation-of-spring-batch/">The foundation of spring batch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/26/common-format-of-csv-files/">Common Format of CSV Files</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Links</h1>
+    <ul>
+    	<li><a href="http://askcuix.appspot.com" target="_blank">Chris @GAE</a></li>
+		<li><a href="https://github.com/askcuix" target="_blank">Chris @GitHub</a></li>
+		<li><a href="http://mindon.github.com" target="_blank">Mindon.IDEA</a></li>
+		<li><a href="http://aleung.github.com/blog/" target="_blank">Good good study, day day up</a></li>
+    </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Chris -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'askcuix';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://askcuix.github.com/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/';
+        var disqus_url = 'http://askcuix.github.com/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+</body>
+</html>

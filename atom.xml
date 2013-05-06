@@ -4,7 +4,7 @@
   <title><![CDATA[Chris's Blog]]></title>
   <link href="http://askcuix.github.com/atom.xml" rel="self"/>
   <link href="http://askcuix.github.com/"/>
-  <updated>2013-04-17T00:01:35+08:00</updated>
+  <updated>2013-05-06T23:25:00+08:00</updated>
   <id>http://askcuix.github.com/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -12,6 +12,157 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Spring NamedParameterJdbcTemplate的内存泄漏问题]]></title>
+    <link href="http://askcuix.github.com/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/"/>
+    <updated>2013-05-06T22:36:00+08:00</updated>
+    <id>http://askcuix.github.com/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate</id>
+    <content type="html"><![CDATA[<p>我们的项目是使用Spring JDBC来操作DB的，通常是直接使用SimpleJdbcTemplate，一直以来也没发现什么问题。今天在做performance test的时候，发现内存增长很快，甚至出现了out of memory。把heap dump拉下来查看后，发现是这次新加的一个service出现了问题，但根源是因为NamedParameterJdbcTemplate中的HashMap导致的。</p>
+
+<p>这里要先说明使用的Spring的版本是2.5.6，在3.0.3中已修复该问题。</p>
+
+<!-- more -->
+
+
+<p>查看调用的trace是service->SimpleJdbcTemplate->NamedParameterJdbcTemplate。一直没有仔细看过SimpleJdbcTemplate的源码，其实它基本都是通过调用NamedParameterJdbcTemplate来完成操作的。SimpleJdbcTemplate的初始化，其实就是初始化NamedParameterJdbcTemplate。</p>
+
+<figure class='code'><figcaption><span>SimpleJdbcTemplate.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>   <span class="kd">public</span> <span class="nf">SimpleJdbcTemplate</span><span class="o">(</span><span class="n">DataSource</span> <span class="n">dataSource</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">namedParameterJdbcOperations</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NamedParameterJdbcTemplate</span><span class="o">(</span><span class="n">dataSource</span><span class="o">);</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">public</span> <span class="nf">SimpleJdbcTemplate</span><span class="o">(</span><span class="n">JdbcOperations</span> <span class="n">classicJdbcTemplate</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">namedParameterJdbcOperations</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NamedParameterJdbcTemplate</span><span class="o">(</span><span class="n">classicJdbcTemplate</span><span class="o">);</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">public</span> <span class="nf">SimpleJdbcTemplate</span><span class="o">(</span><span class="n">NamedParameterJdbcOperations</span> <span class="n">namedParameterJdbcTemplate</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">namedParameterJdbcOperations</span> <span class="o">=</span> <span class="n">namedParameterJdbcTemplate</span><span class="o">;</span>
+</span><span class='line'>   <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>NamedParameterJdbcTemplate的作用是方便使用命名式的参数，以代替使用SQL中的‘?’。NamedParameterJdbcTemplate会将每次解析过后的SQL放在一个HashMap中，以起到cache的作用，而问题就出现这个Map上。</p>
+
+<figure class='code'><figcaption><span>NamedParameterJdbcTemplate.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>   <span class="kd">private</span> <span class="kd">final</span> <span class="n">Map</span> <span class="n">parsedSqlCache</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">protected</span> <span class="n">ParsedSql</span> <span class="nf">getParsedSql</span><span class="o">(</span><span class="n">String</span> <span class="n">sql</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">parsedSqlCache</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">ParsedSql</span> <span class="n">parsedSql</span> <span class="o">=</span> <span class="o">(</span><span class="n">ParsedSql</span><span class="o">)</span> <span class="k">this</span><span class="o">.</span><span class="na">parsedSqlCache</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">sql</span><span class="o">);</span>
+</span><span class='line'>          <span class="k">if</span> <span class="o">(</span><span class="n">parsedSql</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>              <span class="n">parsedSql</span> <span class="o">=</span> <span class="n">NamedParameterUtils</span><span class="o">.</span><span class="na">parseSqlStatement</span><span class="o">(</span><span class="n">sql</span><span class="o">);</span>
+</span><span class='line'>              <span class="k">this</span><span class="o">.</span><span class="na">parsedSqlCache</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">sql</span><span class="o">,</span> <span class="n">parsedSql</span><span class="o">);</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>          <span class="k">return</span> <span class="n">parsedSql</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>从上面的代码可以看到，NamedParameterJdbcTemplate不断的将解析过的SQL放入parsedSqlCache中，但并没有任何限制，而我们的service会根据不同的条件产生不同的SQL（条件参数比较多），同时这个SimpleJdbcTemplate也是share的，因此出现了out of memory的问题，当然，测试server的配置比较差也是其中一个原因。</p>
+
+<p>这个问题可以参见<a href="https://jira.springsource.org/browse/SPR-7237">Spring Bug 7237</a>，该问题已在3.0.3中修复。</p>
+
+<p>由于该阶段已不可能升级Spring的版本，潜在的风险太大，因此可自己实现一个NamedParameterJdbcTemplate，去override掉getParsedSql方法，可取消cache的作用，或参考Spring 3中的实现。</p>
+
+<figure class='code'><figcaption><span>NamedParameterJdbcTemplate.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>   <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">DEFAULT_CACHE_LIMIT</span> <span class="o">=</span> <span class="mi">256</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">private</span> <span class="kd">volatile</span> <span class="kt">int</span> <span class="n">cacheLimit</span> <span class="o">=</span> <span class="n">DEFAULT_CACHE_LIMIT</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">private</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">ParsedSql</span><span class="o">&gt;</span> <span class="n">parsedSqlCache</span> <span class="o">=</span>
+</span><span class='line'>          <span class="k">new</span> <span class="n">LinkedHashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">ParsedSql</span><span class="o">&gt;(</span><span class="n">DEFAULT_CACHE_LIMIT</span><span class="o">,</span> <span class="mf">0.75f</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">removeEldestEntry</span><span class="o">(</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">ParsedSql</span><span class="o">&gt;</span> <span class="n">eldest</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nf">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">getCacheLimit</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCacheLimit</span><span class="o">(</span><span class="kt">int</span> <span class="n">cacheLimit</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">cacheLimit</span> <span class="o">=</span> <span class="n">cacheLimit</span><span class="o">;</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getCacheLimit</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">cacheLimit</span><span class="o">;</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'>  
+</span><span class='line'>   <span class="kd">protected</span> <span class="n">ParsedSql</span> <span class="nf">getParsedSql</span><span class="o">(</span><span class="n">String</span> <span class="n">sql</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">getCacheLimit</span><span class="o">()</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="n">NamedParameterUtils</span><span class="o">.</span><span class="na">parseSqlStatement</span><span class="o">(</span><span class="n">sql</span><span class="o">);</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>      <span class="kd">synchronized</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">parsedSqlCache</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">ParsedSql</span> <span class="n">parsedSql</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">parsedSqlCache</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">sql</span><span class="o">);</span>
+</span><span class='line'>          <span class="k">if</span> <span class="o">(</span><span class="n">parsedSql</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>              <span class="n">parsedSql</span> <span class="o">=</span> <span class="n">NamedParameterUtils</span><span class="o">.</span><span class="na">parseSqlStatement</span><span class="o">(</span><span class="n">sql</span><span class="o">);</span>
+</span><span class='line'>              <span class="k">this</span><span class="o">.</span><span class="na">parsedSqlCache</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">sql</span><span class="o">,</span> <span class="n">parsedSql</span><span class="o">);</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>          <span class="k">return</span> <span class="n">parsedSql</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>   <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后更改一下SimpleJdbcTemplate的实例化方式，先实例化一个改写过的NamedParameterJdbcTemplate，然后作为SimpleJdbcTemplate构造函数的参数来进行实例化。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[垃圾收集器及内存分配]]></title>
