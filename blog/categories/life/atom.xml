@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Life | Chris's Blog]]></title>
-  <link href="http://askcuix.github.com/blog/categories/life/atom.xml" rel="self"/>
-  <link href="http://askcuix.github.com/"/>
-  <updated>2013-05-06T23:25:00+08:00</updated>
-  <id>http://askcuix.github.com/</id>
+  <link href="http://askcuix.github.io/blog/categories/life/atom.xml" rel="self"/>
+  <link href="http://askcuix.github.io/"/>
+  <updated>2013-05-06T23:29:11+08:00</updated>
+  <id>http://askcuix.github.io/</id>
   <author>
     <name><![CDATA[Chris]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[New Blog Opening]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/06/new-blog-opening/"/>
+    <link href="http://askcuix.github.io/blog/2013/03/06/new-blog-opening/"/>
     <updated>2013-03-06T23:42:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/06/new-blog-opening</id>
+    <id>http://askcuix.github.io/blog/2013/03/06/new-blog-opening</id>
     <content type="html"><![CDATA[<p>新blog开张啦，以此博文作为纪念。</p>
 
 <p>这些年折腾了好几个博客了，但加起来的文字总共也没有多少，我的热乎劲也就在搭建那一刹那，特别是像在GAE上要自己去折腾整个过程。所以说，我并不热衷于写博客，而是中意于搭建这样一个小站的过程。说到原因呢，可能是因为哥曾经也是个web developer，但最近几年一直在做backend，把以前的frontend功底也丢的差不多了，所以每次遇到这样的机会，总是会让我心潮澎湃。</p>

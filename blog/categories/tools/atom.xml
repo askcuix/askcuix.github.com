@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Tools | Chris's Blog]]></title>
-  <link href="http://askcuix.github.com/blog/categories/tools/atom.xml" rel="self"/>
-  <link href="http://askcuix.github.com/"/>
-  <updated>2013-05-06T23:25:00+08:00</updated>
-  <id>http://askcuix.github.com/</id>
+  <link href="http://askcuix.github.io/blog/categories/tools/atom.xml" rel="self"/>
+  <link href="http://askcuix.github.io/"/>
+  <updated>2013-05-06T23:29:11+08:00</updated>
+  <id>http://askcuix.github.io/</id>
   <author>
     <name><![CDATA[Chris]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[The syntax of markdown]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown/"/>
+    <link href="http://askcuix.github.io/blog/2013/03/10/the-syntax-of-markdown/"/>
     <updated>2013-03-10T17:36:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown</id>
+    <id>http://askcuix.github.io/blog/2013/03/10/the-syntax-of-markdown</id>
     <content type="html"><![CDATA[<p>Octopress使用的是markdown语法，和wiki的语法有点相似，但又不完全相同，这里将常用的语法记录下来便于查阅。</p>
 
 <h2>标题</h2>
@@ -85,9 +85,9 @@
   
   <entry>
     <title type="html"><![CDATA[Octopress常用命令]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/10/the-common-commands-of-octopress/"/>
+    <link href="http://askcuix.github.io/blog/2013/03/10/the-common-commands-of-octopress/"/>
     <updated>2013-03-10T17:34:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/10/the-common-commands-of-octopress</id>
+    <id>http://askcuix.github.io/blog/2013/03/10/the-common-commands-of-octopress</id>
     <content type="html"><![CDATA[<p>Octopress经常使用到的命令，在这里做个总结，方面查阅。</p>
 
 <pre><code>rake new_post["title"]

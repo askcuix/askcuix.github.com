@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Linux | Chris's Blog]]></title>
-  <link href="http://askcuix.github.com/blog/categories/linux/atom.xml" rel="self"/>
-  <link href="http://askcuix.github.com/"/>
-  <updated>2013-05-06T23:25:00+08:00</updated>
-  <id>http://askcuix.github.com/</id>
+  <link href="http://askcuix.github.io/blog/categories/linux/atom.xml" rel="self"/>
+  <link href="http://askcuix.github.io/"/>
+  <updated>2013-05-06T23:29:11+08:00</updated>
+  <id>http://askcuix.github.io/</id>
   <author>
     <name><![CDATA[Chris]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Korn Shell Script]]></title>
-    <link href="http://askcuix.github.com/blog/2013/04/14/korn-shell-script/"/>
+    <link href="http://askcuix.github.io/blog/2013/04/14/korn-shell-script/"/>
     <updated>2013-04-14T23:45:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/04/14/korn-shell-script</id>
+    <id>http://askcuix.github.io/blog/2013/04/14/korn-shell-script</id>
     <content type="html"><![CDATA[<h2>基本语法</h2>
 
 <p>";"作为语句的结束，因此可以将多个command写在一行。</p>

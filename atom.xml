@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Chris's Blog]]></title>
-  <link href="http://askcuix.github.com/atom.xml" rel="self"/>
-  <link href="http://askcuix.github.com/"/>
-  <updated>2013-05-06T23:25:00+08:00</updated>
-  <id>http://askcuix.github.com/</id>
+  <link href="http://askcuix.github.io/atom.xml" rel="self"/>
+  <link href="http://askcuix.github.io/"/>
+  <updated>2013-05-06T23:29:11+08:00</updated>
+  <id>http://askcuix.github.io/</id>
   <author>
     <name><![CDATA[Chris]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Spring NamedParameterJdbcTemplate的内存泄漏问题]]></title>
-    <link href="http://askcuix.github.com/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/"/>
+    <link href="http://askcuix.github.io/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/"/>
     <updated>2013-05-06T22:36:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate</id>
+    <id>http://askcuix.github.io/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate</id>
     <content type="html"><![CDATA[<p>我们的项目是使用Spring JDBC来操作DB的，通常是直接使用SimpleJdbcTemplate，一直以来也没发现什么问题。今天在做performance test的时候，发现内存增长很快，甚至出现了out of memory。把heap dump拉下来查看后，发现是这次新加的一个service出现了问题，但根源是因为NamedParameterJdbcTemplate中的HashMap导致的。</p>
 
 <p>这里要先说明使用的Spring的版本是2.5.6，在3.0.3中已修复该问题。</p>
@@ -166,9 +166,9 @@
   
   <entry>
     <title type="html"><![CDATA[垃圾收集器及内存分配]]></title>
-    <link href="http://askcuix.github.com/blog/2013/04/16/garbage-collection-and-memory-allocation/"/>
+    <link href="http://askcuix.github.io/blog/2013/04/16/garbage-collection-and-memory-allocation/"/>
     <updated>2013-04-16T23:54:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/04/16/garbage-collection-and-memory-allocation</id>
+    <id>http://askcuix.github.io/blog/2013/04/16/garbage-collection-and-memory-allocation</id>
     <content type="html"><![CDATA[<p>程序计数器、虚拟机栈和本地方法栈的内存分配大体在编译器就可以确定，并且这些区域和线程有着相同的生命周期，在方法或线程结束时，内存也就回收了。而Java堆和方法区的内存分配和回收都是动态的，只有在程序运行期间才知道会创建哪些对象，因此是垃圾收集器所关注的内存区域。</p>
 
 <h2>对象标记算法</h2>
@@ -275,9 +275,9 @@
   
   <entry>
     <title type="html"><![CDATA[Korn Shell Script]]></title>
-    <link href="http://askcuix.github.com/blog/2013/04/14/korn-shell-script/"/>
+    <link href="http://askcuix.github.io/blog/2013/04/14/korn-shell-script/"/>
     <updated>2013-04-14T23:45:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/04/14/korn-shell-script</id>
+    <id>http://askcuix.github.io/blog/2013/04/14/korn-shell-script</id>
     <content type="html"><![CDATA[<h2>基本语法</h2>
 
 <p>&#8221;;&#8221;作为语句的结束，因此可以将多个command写在一行。</p>
@@ -501,9 +501,9 @@
   
   <entry>
     <title type="html"><![CDATA[The foundation of spring batch]]></title>
-    <link href="http://askcuix.github.com/blog/2013/04/01/the-foundation-of-spring-batch/"/>
+    <link href="http://askcuix.github.io/blog/2013/04/01/the-foundation-of-spring-batch/"/>
     <updated>2013-04-01T22:46:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/04/01/the-foundation-of-spring-batch</id>
+    <id>http://askcuix.github.io/blog/2013/04/01/the-foundation-of-spring-batch</id>
     <content type="html"><![CDATA[<p>Spring Batch是埃森哲贡献给Spring的一个开源项目，现在由双方共同维护。通过Spring Batch可以构建出轻量级的大数据量并⾏处理应⽤,⽀持事务、并发、流程、监控、纵向和横向扩展,提供统一的接口管理。Spring Batch并不包含scheduler，它只是一个通用的batch处理框架，你可以通过QuartZ，Control-M等scheduler去调用。</p>
 
 <p>Spring Batch能够处理大批量数据的导入、导出和业务逻辑计算，执行过程无需人工干预。我们的系统是一个金融产品信息的数据中心，需要从不同的系统读取产品信息，也需要将这些信息提供给其它的系统，这种data loading就是Spring Batch的一种应用场景。</p>
@@ -511,11 +511,11 @@
 <!-- more -->
 
 
-<p><img src="http://askcuix.github.com/images/blog/spring_batch_common_process.png" alt="Spring Batch Common Process" /></p>
+<p><img src="http://askcuix.github.io/images/blog/spring_batch_common_process.png" alt="Spring Batch Common Process" /></p>
 
 <p>上图就是Spring Batch的常用方式，从DB或是不同类型的文件中读取数据，经过转换后再写入DB或者文件。</p>
 
-<p><img src="http://askcuix.github.com/images/blog/spring_batch_domain.png" alt="Spring Batch Domain" /></p>
+<p><img src="http://askcuix.github.io/images/blog/spring_batch_domain.png" alt="Spring Batch Domain" /></p>
 
 <p>上图是一个Job执行的结构图，下面是对这些domain对象的简单描述，只是学习时随笔记下来的，不够详细，可以查看Spring Batch文档中的描述。</p>
 
@@ -655,9 +655,9 @@
   
   <entry>
     <title type="html"><![CDATA[Common Format of CSV Files]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/26/common-format-of-csv-files/"/>
+    <link href="http://askcuix.github.io/blog/2013/03/26/common-format-of-csv-files/"/>
     <updated>2013-03-26T23:43:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/26/common-format-of-csv-files</id>
+    <id>http://askcuix.github.io/blog/2013/03/26/common-format-of-csv-files</id>
     <content type="html"><![CDATA[<p>CSV是一种常见的文件格式，常用于不同系统之间的数据交换，对于该文件格式可以简单描述为：一组使用逗号“,”分隔字段，并以换行符作为一行数据结束的数据集合。该文件可以使用Microsoft Excel查看，但是中文字符会显示为乱码。</p>
 
 <p>这个描述就真的只是简单描述，实际上CSV的格式处理没有这么简单。最近在和另外一个系统做集成，我们的系统会提供CSV数据文件给对方系统处理，由于我们系统中个别字段会包括换行符“CRLF”（这是遗留系统，就不用纠结为什么字段中会包含换行符了），也就是说一个字段可能会显示在几行上，但是这个字段是包含在双引号中的，结果对方系统就处理不了了。因为对方系统只是简单的按行处理数据，用逗号解析字段。</p>
@@ -686,9 +686,9 @@
   
   <entry>
     <title type="html"><![CDATA[JVM运行时内存区域]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/26/the-runtime-memory-of-jvm/"/>
+    <link href="http://askcuix.github.io/blog/2013/03/26/the-runtime-memory-of-jvm/"/>
     <updated>2013-03-26T23:31:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/26/the-runtime-memory-of-jvm</id>
+    <id>http://askcuix.github.io/blog/2013/03/26/the-runtime-memory-of-jvm</id>
     <content type="html"><![CDATA[<p>Java虚拟机管理的运行时数据区域：</p>
 
 <ul>
@@ -738,9 +738,9 @@
   
   <entry>
     <title type="html"><![CDATA[Supplementary Characters in Java]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/15/supplementary-characters-in-java/"/>
+    <link href="http://askcuix.github.io/blog/2013/03/15/supplementary-characters-in-java/"/>
     <updated>2013-03-15T23:37:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/15/supplementary-characters-in-java</id>
+    <id>http://askcuix.github.io/blog/2013/03/15/supplementary-characters-in-java</id>
     <content type="html"><![CDATA[<p>工作中经常会涉及到文件处理，而fixlength类型的文件又是一种很常见的格式。众所周知，fixlength类型的数据就是每个字段对应一行数据中固定长度的字符，每个字段都有对应的start offset和end offset，用实现来表示就是String.substring(start, end)，所以start和end的位置是至关重要的，一个字段对应错了，后面的字段就全错了。</p>
 
 <p>在Java中使用UTF-16来表示unicode字符，一个字符就是16 bit，像String.length()就是返回有多少个16 bit。unicode支持的字符的code point范围是U+0000到U+10FFFF，这其中包括基本字符（BMP）和补充字符（supplementary character），基本字符时从U+0000到U+FFFF，补充字符从U+10000到U+10FFFF。<!-- more -->在UTF-16编码中，基本字符占用一个16 bit，而补充字符占用两个16 bit。这样Java String的很多方法就会出现问题了，当然也包括上面提到的substring和length。那么如果fixlength文件中含有补充字符，则会导致字段map错误。</p>
@@ -764,9 +764,9 @@
   
   <entry>
     <title type="html"><![CDATA[The syntax of markdown]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown/"/>
+    <link href="http://askcuix.github.io/blog/2013/03/10/the-syntax-of-markdown/"/>
     <updated>2013-03-10T17:36:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown</id>
+    <id>http://askcuix.github.io/blog/2013/03/10/the-syntax-of-markdown</id>
     <content type="html"><![CDATA[<p>Octopress使用的是markdown语法，和wiki的语法有点相似，但又不完全相同，这里将常用的语法记录下来便于查阅。</p>
 
 <h2>标题</h2>
@@ -834,9 +834,9 @@
   
   <entry>
     <title type="html"><![CDATA[Octopress常用命令]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/10/the-common-commands-of-octopress/"/>
+    <link href="http://askcuix.github.io/blog/2013/03/10/the-common-commands-of-octopress/"/>
     <updated>2013-03-10T17:34:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/10/the-common-commands-of-octopress</id>
+    <id>http://askcuix.github.io/blog/2013/03/10/the-common-commands-of-octopress</id>
     <content type="html"><![CDATA[<p>Octopress经常使用到的命令，在这里做个总结，方面查阅。</p>
 
 <pre><code>rake new_post["title"]
@@ -882,9 +882,9 @@ description:
   
   <entry>
     <title type="html"><![CDATA[New Blog Opening]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/06/new-blog-opening/"/>
+    <link href="http://askcuix.github.io/blog/2013/03/06/new-blog-opening/"/>
     <updated>2013-03-06T23:42:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/06/new-blog-opening</id>
+    <id>http://askcuix.github.io/blog/2013/03/06/new-blog-opening</id>
     <content type="html"><![CDATA[<p>新blog开张啦，以此博文作为纪念。</p>
 
 <p>这些年折腾了好几个博客了，但加起来的文字总共也没有多少，我的热乎劲也就在搭建那一刹那，特别是像在GAE上要自己去折腾整个过程。所以说，我并不热衷于写博客，而是中意于搭建这样一个小站的过程。说到原因呢，可能是因为哥曾经也是个web developer，但最近几年一直在做backend，把以前的frontend功底也丢的差不多了，所以每次遇到这样的机会，总是会让我心潮澎湃。</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Java | Chris's Blog]]></title>
-  <link href="http://askcuix.github.com/blog/categories/java/atom.xml" rel="self"/>
-  <link href="http://askcuix.github.com/"/>
-  <updated>2013-05-06T23:25:00+08:00</updated>
-  <id>http://askcuix.github.com/</id>
+  <link href="http://askcuix.github.io/blog/categories/java/atom.xml" rel="self"/>
+  <link href="http://askcuix.github.io/"/>
+  <updated>2013-05-06T23:29:11+08:00</updated>
+  <id>http://askcuix.github.io/</id>
   <author>
     <name><![CDATA[Chris]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Spring NamedParameterJdbcTemplate的内存泄漏问题]]></title>
-    <link href="http://askcuix.github.com/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/"/>
+    <link href="http://askcuix.github.io/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/"/>
     <updated>2013-05-06T22:36:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate</id>
+    <id>http://askcuix.github.io/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate</id>
     <content type="html"><![CDATA[<p>我们的项目是使用Spring JDBC来操作DB的，通常是直接使用SimpleJdbcTemplate，一直以来也没发现什么问题。今天在做performance test的时候，发现内存增长很快，甚至出现了out of memory。把heap dump拉下来查看后，发现是这次新加的一个service出现了问题，但根源是因为NamedParameterJdbcTemplate中的HashMap导致的。</p>
 
 <p>这里要先说明使用的Spring的版本是2.5.6，在3.0.3中已修复该问题。</p>
@@ -129,9 +129,9 @@
   
   <entry>
     <title type="html"><![CDATA[垃圾收集器及内存分配]]></title>
-    <link href="http://askcuix.github.com/blog/2013/04/16/garbage-collection-and-memory-allocation/"/>
+    <link href="http://askcuix.github.io/blog/2013/04/16/garbage-collection-and-memory-allocation/"/>
     <updated>2013-04-16T23:54:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/04/16/garbage-collection-and-memory-allocation</id>
+    <id>http://askcuix.github.io/blog/2013/04/16/garbage-collection-and-memory-allocation</id>
     <content type="html"><![CDATA[<p>程序计数器、虚拟机栈和本地方法栈的内存分配大体在编译器就可以确定，并且这些区域和线程有着相同的生命周期，在方法或线程结束时，内存也就回收了。而Java堆和方法区的内存分配和回收都是动态的，只有在程序运行期间才知道会创建哪些对象，因此是垃圾收集器所关注的内存区域。</p>
 
 <h2>对象标记算法</h2>
@@ -238,9 +238,9 @@
   
   <entry>
     <title type="html"><![CDATA[The foundation of spring batch]]></title>
-    <link href="http://askcuix.github.com/blog/2013/04/01/the-foundation-of-spring-batch/"/>
+    <link href="http://askcuix.github.io/blog/2013/04/01/the-foundation-of-spring-batch/"/>
     <updated>2013-04-01T22:46:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/04/01/the-foundation-of-spring-batch</id>
+    <id>http://askcuix.github.io/blog/2013/04/01/the-foundation-of-spring-batch</id>
     <content type="html"><![CDATA[<p>Spring Batch是埃森哲贡献给Spring的一个开源项目，现在由双方共同维护。通过Spring Batch可以构建出轻量级的大数据量并⾏处理应⽤,⽀持事务、并发、流程、监控、纵向和横向扩展,提供统一的接口管理。Spring Batch并不包含scheduler，它只是一个通用的batch处理框架，你可以通过QuartZ，Control-M等scheduler去调用。</p>
 
 <p>Spring Batch能够处理大批量数据的导入、导出和业务逻辑计算，执行过程无需人工干预。我们的系统是一个金融产品信息的数据中心，需要从不同的系统读取产品信息，也需要将这些信息提供给其它的系统，这种data loading就是Spring Batch的一种应用场景。</p>
@@ -389,9 +389,9 @@
   
   <entry>
     <title type="html"><![CDATA[Common Format of CSV Files]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/26/common-format-of-csv-files/"/>
+    <link href="http://askcuix.github.io/blog/2013/03/26/common-format-of-csv-files/"/>
     <updated>2013-03-26T23:43:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/26/common-format-of-csv-files</id>
+    <id>http://askcuix.github.io/blog/2013/03/26/common-format-of-csv-files</id>
     <content type="html"><![CDATA[<p>CSV是一种常见的文件格式，常用于不同系统之间的数据交换，对于该文件格式可以简单描述为：一组使用逗号“,”分隔字段，并以换行符作为一行数据结束的数据集合。该文件可以使用Microsoft Excel查看，但是中文字符会显示为乱码。</p>
 
 <p>这个描述就真的只是简单描述，实际上CSV的格式处理没有这么简单。最近在和另外一个系统做集成，我们的系统会提供CSV数据文件给对方系统处理，由于我们系统中个别字段会包括换行符“CRLF”（这是遗留系统，就不用纠结为什么字段中会包含换行符了），也就是说一个字段可能会显示在几行上，但是这个字段是包含在双引号中的，结果对方系统就处理不了了。因为对方系统只是简单的按行处理数据，用逗号解析字段。</p>
@@ -420,9 +420,9 @@
   
   <entry>
     <title type="html"><![CDATA[JVM运行时内存区域]]></title>
-    <link href="http://askcuix.github.com/blog/2013/03/26/the-runtime-memory-of-jvm/"/>
+    <link href="http://askcuix.github.io/blog/2013/03/26/the-runtime-memory-of-jvm/"/>
     <updated>2013-03-26T23:31:00+08:00</updated>
-    <id>http://askcuix.github.com/blog/2013/03/26/the-runtime-memory-of-jvm</id>
+    <id>http://askcuix.github.io/blog/2013/03/26/the-runtime-memory-of-jvm</id>
     <content type="html"><![CDATA[<p>Java虚拟机管理的运行时数据区域：</p>
 
 <ul>

@@ -1,63 +1,63 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://askcuix.github.com/blog/2013/03/06/new-blog-opening/</loc>
+        <loc>http://askcuix.github.io/blog/2013/03/06/new-blog-opening/</loc>
         <lastmod>2013-04-01T22:28:12+08:00</lastmod>
     </url>
     <url>
-        <loc>http://askcuix.github.com/blog/2013/03/10/the-common-commands-of-octopress/</loc>
+        <loc>http://askcuix.github.io/blog/2013/03/10/the-common-commands-of-octopress/</loc>
         <lastmod>2013-04-01T22:25:01+08:00</lastmod>
     </url>
     <url>
-        <loc>http://askcuix.github.com/blog/2013/03/10/the-syntax-of-markdown/</loc>
+        <loc>http://askcuix.github.io/blog/2013/03/10/the-syntax-of-markdown/</loc>
         <lastmod>2013-04-01T22:28:55+08:00</lastmod>
     </url>
     <url>
-        <loc>http://askcuix.github.com/blog/2013/03/15/supplementary-characters-in-java/</loc>
+        <loc>http://askcuix.github.io/blog/2013/03/15/supplementary-characters-in-java/</loc>
         <lastmod>2013-04-01T22:30:01+08:00</lastmod>
     </url>
     <url>
-        <loc>http://askcuix.github.com/blog/2013/03/26/the-runtime-memory-of-jvm/</loc>
+        <loc>http://askcuix.github.io/blog/2013/03/26/the-runtime-memory-of-jvm/</loc>
         <lastmod>2013-04-01T22:32:12+08:00</lastmod>
     </url>
     <url>
-        <loc>http://askcuix.github.com/blog/2013/03/26/common-format-of-csv-files/</loc>
+        <loc>http://askcuix.github.io/blog/2013/03/26/common-format-of-csv-files/</loc>
         <lastmod>2013-04-01T22:31:16+08:00</lastmod>
     </url>
     <url>
-        <loc>http://askcuix.github.com/blog/2013/04/01/the-foundation-of-spring-batch/</loc>
+        <loc>http://askcuix.github.io/blog/2013/04/01/the-foundation-of-spring-batch/</loc>
         <lastmod>2013-04-14T23:36:55+08:00</lastmod>
     </url>
     <url>
-        <loc>http://askcuix.github.com/blog/2013/04/14/korn-shell-script/</loc>
+        <loc>http://askcuix.github.io/blog/2013/04/14/korn-shell-script/</loc>
         <lastmod>2013-04-15T00:17:53+08:00</lastmod>
     </url>
     <url>
         <loc>
-            http://askcuix.github.com/blog/2013/04/16/garbage-collection-and-memory-allocation/
+            http://askcuix.github.io/blog/2013/04/16/garbage-collection-and-memory-allocation/
         </loc>
         <lastmod>2013-04-17T00:01:34+08:00</lastmod>
     </url>
     <url>
         <loc>
-            http://askcuix.github.com/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/
+            http://askcuix.github.io/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/
         </loc>
         <lastmod>2013-05-06T23:25:00+08:00</lastmod>
     </url>
     <url>
-        <loc>http://askcuix.github.com/about/</loc>
+        <loc>http://askcuix.github.io/about/</loc>
         <lastmod>2013-04-14T23:22:08+08:00</lastmod>
     </url>
     <url>
-        <loc>http://askcuix.github.com/blog/archives/</loc>
+        <loc>http://askcuix.github.io/blog/archives/</loc>
         <lastmod>2013-05-06T23:25:00+08:00</lastmod>
     </url>
     <url>
-        <loc>http://askcuix.github.com/</loc>
+        <loc>http://askcuix.github.io/</loc>
         <lastmod>2013-05-06T23:25:00+08:00</lastmod>
     </url>
     <url>
-        <loc>http://askcuix.github.com/robots.txt</loc>
+        <loc>http://askcuix.github.io/robots.txt</loc>
         <lastmod>2013-03-06T22:53:48+08:00</lastmod>
     </url>
 </urlset>

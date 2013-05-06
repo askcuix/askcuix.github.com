@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://askcuix.github.com/sitemap.xml 
+Sitemap: http://askcuix.github.io/sitemap.xml 
