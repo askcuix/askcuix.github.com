@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: SCM | Chris's Blog]]></title>
+  <link href="http://askcuix.github.io/blog/categories/scm/atom.xml" rel="self"/>
+  <link href="http://askcuix.github.io/"/>
+  <updated>2013-05-28T00:15:57+08:00</updated>
+  <id>http://askcuix.github.io/</id>
+  <author>
+    <name><![CDATA[Chris]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Git常用命令]]></title>
+    <link href="http://askcuix.github.io/blog/2013/05/27/the-git-command/"/>
+    <updated>2013-05-27T23:35:00+08:00</updated>
+    <id>http://askcuix.github.io/blog/2013/05/27/the-git-command</id>
+    <content type="html"><![CDATA[<h2>Git配置</h2>
+
+<p><strong>/etc/gitconfig</strong>：系统中对所有用户都普遍适用的配置。若使用git config时用 --system 选项，读写的就是这个文件。 <br/>
+<strong>~/.gitconfig</strong>：用户目录下的配置文件只适用于该用户。若使用git config时用 --global选项，读写的就是这个文件。 <br/>
+<strong>.git/config</strong>：这里的配置仅针对当前项目有效。每一个级别的配置都会覆盖上层的相同配置，所以 .git/config 里的配置会覆盖 /etc/giconfig 中的同名变量。</p>
+
+<h2>文件状态</h2>
+
+<p><strong>untracked</strong>：未加入版本控制管理的文件。<br/>
+<strong>tracked</strong>：已纳入版本控制管理的文件。<br/>
+<strong>unmodified</strong>：未做过修改，并且已经在版本控制管理中的文件。<br/>
+<strong>modified</strong>：做过修改的受版本控制管理的文件。<br/>
+<strong>staged</strong>：已放入暂存区的文件。untracked或者modified的文件，执行过git add后，就进入了暂存区。</p>
+
+<!-- more -->
+
+
+<h2>.gitignore格式规范</h2>
+
+<ol>
+<li>所有空行或者以注释符号 # 开头的行都会被Git忽略。</li>
+<li>可以使用标准的glob模式匹配。glob模式是指shell所使用的简化了的正则表达式。星号（*）匹配零个或多个任意字符；[abc]匹配任何一个列在方括号中的字符；问号（?）只匹配一个任意字符；[a-z]匹配所有在这两个字符范围内的字符。</li>
+<li>匹配模式最后跟反斜杠（/）说明要忽略的是目录。</li>
+<li>要忽略指定模式以外的文件或目录，可以在模式前加上惊叹号（!）取反。</li>
+</ol>
+
+
+<h2>图形化工具</h2>
+
+<p>在项目工作目录中输入 <strong>gitk</strong> 命令后，图形化工具就会启动。</p>
+
+<h2>HEAD</h2>
+
+<p>HEAD是一个指向正在工作中的本地分支的指针。</p>
+
+<h2>Git命令</h2>
+
+<p><strong>git init</strong><br/>
+将当前目录加入Git管理。</p>
+
+<p><strong>git clone [url]</strong><br/>
+克隆仓库。</p>
+
+<p><strong>git clone [url] [name]</strong><br/>
+自定义克隆仓库的名称。<br/>
+<em>--bare</em> 把现有仓库导出未裸仓库，name以 .git 结尾。</p>
+
+<p><strong>git status</strong><br/>
+查看当前文件状态。</p>
+
+<p><strong>git add [file/dir]</strong><br/>
+跟踪新文件或目录。如果是目录的话，将递归跟踪该目录下的所有文件。该操作会将目标文件放入暂存区，同时untracked的文件标记为需要track，还能用于合并时把有冲突的文件标记为已解决状态。在执行了git add操作后，又对文件做出了修改，需要再次执行git add操作，否则执行提交操作时，只会将修改前的版本提交到仓库中。</p>
+
+<p><strong>git diff</strong><br/>
+查看尚未暂存的文件的变化内容。此命令比较的是工作目录中当前文件和暂存区域快照之间的差异。<br/>
+<em>--cached</em> / <em>--staged</em> 查看已经暂存起来的文件和上次提交时的快照之间的差异。</p>
+
+<p><strong>git commit</strong><br/>
+提交暂存区域的更新。没有提交到暂存区的文件，提交时不会包含。这种无参数的提交命令会启动文本编辑器以便输入本次提交的说明。 <br/>
+<em>-m <comments></em> 可以直接执行提交操作。<br/>
+<em>-a</em> Git会自动把所有已经跟踪过的文件暂存起来一并提交，从而跳过git add步骤。<br/>
+<em>--amend</em> 撤销刚才的提交操作，使用当前的暂存区域快照重新提交。</p>
+
+<p><strong>git reset HEAD [file]</strong><br/>
+取消已经暂存的文件。</p>
+
+<p><strong>git checkout -- [file]</strong><br/>
+取消对未放入暂存区的文件的修改。</p>
+
+<p><strong>git rm [file/dir]</strong><br/>
+从已跟踪文件清单中移除文件，并从工作目录中删除指定的文件，才不会出现在未跟踪的文件清单中。<br/>
+<em>-f</em>  强制删除已经放到暂存区域并且做过修改的文件。<br/>
+<em>--cached</em>  将文件从Git仓库中删除（即移除跟踪），但仍然保留在当前工作目录中。<br/>
+在路径中加上 \* 会递归删除当前目录及子目录中所有匹配的文件。</p>
+
+<p><strong>git mv [from_file] [to_file]</strong><br/>
+重命名操作。<br/>
+该命令相当于运行了下面三条命令：</p>
+
+<pre><code>$ mv [from_file] [to_file]
+$ git rm [from_file]
+$ git add [to_file]
+</code></pre>
+
+<p><strong>git remote</strong><br/>
+查看当前的远程库。在克隆完某个项目后，至少可以看到一个名为origin的远程库。<br/>
+<em>-v</em> 显示对应的克隆地址。</p>
+
+<p><strong>git remote add [shortname] [url]</strong><br/>
+提交一个新的远程仓库。</p>
+
+<p><strong>git fetch [remote-name]</strong><br/>
+从远程仓库抓取数据到本地。fetch命令只是将远端的数据拉到本地仓库，并不自动合并到当前工作分支。</p>
+
+<p><strong>git pull</strong><br/>
+如果设置了某个分支用于跟踪某个远端仓库的分支，可以使用git pull命令自动抓取数据下来，然后将远端分支自动合并到本地仓库中的当前分支。git clone命令本质上就是自动创建了本地的master分支用于跟踪远程仓库中的master分支。</p>
+
+<p><strong>git push [remote-name] [branch-name]</strong><br/>
+将本地仓库中的数据推送到远程仓库。</p>
+
+<p><strong>git push [remote-name] :[branch-name]</strong><br/>
+删除远程分支。</p>
+
+<p><strong>git remote show [remote-name]</strong><br/>
+查看远程仓库的详细信息。</p>
+
+<p><strong>git remote rename [origin-shortname] [shortname]</strong><br/>
+修改远程仓库在本地的简短名称。</p>
+
+<p><strong>git remote rm [shortname]</strong><br/>
+删除对应的远端仓库。</p>
+
+<p><strong>git tag</strong><br/>
+列出现有的标签。<br/>
+<em>-l <pattern></em> 用特定的搜索模式列出符合提交的标签。 <br/>
+<em>&lt;tagname></em> 创建一个轻量级标签。轻量级标签就像是个不会变化的分支，实际上它就是个指向特定提交对象的引用。<br/>
+<em>-a <tagname></em> 创建一个含附注类型的标签。附注标签实际上是存储在仓库中的一个独立对象，它有自身的校验和信息。 <br/>
+<em>-m</em> 指定对应的标签说明。</p>
+
+<p><strong>git show [tagname]</strong><br/>
+查看相应标签的版本信息。</p>
+
+<p><strong>git push origin [tagname]</strong><br/>
+默认情况下，git push并不会把标签传送到远端服务器上，只用通过显示命令才能分享标签到远端仓库。<br/>
+<em>--tags</em> 一次推送所有本地新增的标签上去。</p>
+
+<p><strong>git branch [branchname]</strong><br/>
+创建分支。如果没指定branchname，则列出所有的分支，并标明当前所在分支。<br/>
+<em>-b</em> 创建分支并切换到该分支。<br/>
+<em>-d</em> 删除分支。如果该分支还没并入当前分支，则不允许删除。<br/>
+<em>-D</em> 强制删除分支。<br/>
+<em>-v</em> 查看各个分支最后一个提交对象的信息。<br/>
+<em>--merge</em> 查看哪些分支已被并入当前分支。 <br/>
+<em>--no-merged</em> 查看哪些分支尚未并入当前分支。</p>
+
+<p><strong>git checkout [branchname]</strong><br/>
+切换到其它分支，此时HEAD指向新的分支。</p>
+
+<p><strong>git merge [branchname]</strong><br/>
+合并分支到当前分支。<br/>
+<em>--squash</em> 将目标分支上的所有更改全拿来应用到当前分支。<br/>
+<em>--no-commit</em> 告诉Git此时无需自动生成和记录（合并）提交。</p>
+
+<p><strong>git rebase [branchname]</strong><br/>
+rebase分支内容到当前分支。<br/>
+<em>--onto</em> 指定新的基底分支。</p>
+
+<p><strong>git log</strong><br/>
+查看提交历史。默认会按提交时间列出所有的更新，最近的更新排在最上面。</p>
+
+<pre><code>-[n] 仅显示最近的n条提交。
+--since, --after 仅显示指定时间之后的提交。
+--until, --before 仅显示指定时间之前的提交。
+--author 仅显示指定作者相关的提交。
+--committer 仅显示指定提交者相关的提交。
+--grep 搜索提交说明中的关键字。如果要得到同时满足这两个选项搜索条件的提交，就必须用 --all-match 选项，否则，满足任意一个条件的提交都会被匹配出来。
+-- [path] 显示指定的文件或目录的历史提交。
+-p 展开显示每次提交的内容差异。
+--stat 显示每次更新的文件修改统计信息。
+--shortstat 只显示 --stat 中最后的行数修改提交移除统计。
+--name-only 仅在提交信息后显示已修改的文件清单。
+--abbrev-commit 仅显示SHA-1的前几个字符，而非所有的40个字符。
+--relative-date 使用较短的相对时间显示（比如 “2 weeks ago”）。
+--graph 显示ASCII图形表示的分支合并历史。
+--pretty 使用其它格式显示历史提交信息。可用的选项包括oneline，short，full，fuller和format（后跟指定格式）。用oneline或format时结合--graph选项，可以看到开头多出一些ASCII字符串表示的简单图形，形象的展示了每个提交所在的分支及其分化衍合情况。oneline将每个提交放在一行显示，这在提交数很大时非常有用。format可以定制要显示的记录格式，这样的输出便于后期提取分析，如：$ git log --pretty=format:"%h - %ar : %s"
+</code></pre>
+
+<p>常用的占位符如下：</p>
+
+<pre><code>%H 提交对象（commit）的完整哈希字串
+%h 提交对象的简单哈希字串
+%T 树对象（tree）的完整哈希字串
+%t 树对象的简短哈希字串
+%P 父对象（parent）的完整哈希字串
+%p 父对象的简短哈希字串
+%an 作者（author）的名字
+%ae 作者的电子邮件地址
+%ad 作者修订日期（可以用 -date 选项定制格式）
+%ar 作者修订日期，按多久以前的方式显示
+%cn 提交者（committer）的名字
+%ce 提交者的电子邮件地址
+%cd 提交日期
+%cr 提交日期，按多久以前的方式显示
+%s 提交说明
+</code></pre>
+
+<h2>Tips</h2>
+
+<h3>自动补全</h3>
+
+<p>如果使用的是Bash shell，下载Git的源代码，将<em>contrib/completion/git-completion.bash</em>复制到用户主目录中 <em>cp git-completion.bash ~/.git-completion.bash</em>，并把下面一行内容添加到你的.bashrc文件中：</p>
+
+<pre><code>source ~/.git-completion.bash
+</code></pre>
+
+<p>也可以为系统上所有用户都设置默认使用此脚本。Mac上将此脚本复制到<em>/opt/local/etc/bash_completion.d</em>目录中，Linux上则复制到<em>/etc/bash_completion.d</em>目录中。这两处目录中的脚本，都会在Bash启动时自动加载。</p>
+
+<h3>Git命令别名</h3>
+
+<p>可以用git config为命令设置别名，如：</p>
+
+<pre><code>git config --global alias.ci commit
+</code></pre>
+
+<h2>Resources</h2>
+
+<p>Pro Git中文版：<a href="http://git-scm.com/book/zh">http://git-scm.com/book/zh</a></p>
+]]></content>
+  </entry>
+  
+</feed>

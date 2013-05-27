@@ -91,6 +91,58 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/05/27/the-git-command/">Git常用命令</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-27T23:35:00+08:00" pubdate data-updated="true">May 27<span>th</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Git配置</h2>
+
+<p><strong>/etc/gitconfig</strong>：系统中对所有用户都普遍适用的配置。若使用git config时用 &#8211;system 选项，读写的就是这个文件。 <br/>
+<strong>~/.gitconfig</strong>：用户目录下的配置文件只适用于该用户。若使用git config时用 &#8211;global选项，读写的就是这个文件。 <br/>
+<strong>.git/config</strong>：这里的配置仅针对当前项目有效。每一个级别的配置都会覆盖上层的相同配置，所以 .git/config 里的配置会覆盖 /etc/giconfig 中的同名变量。</p>
+
+<h2>文件状态</h2>
+
+<p><strong>untracked</strong>：未加入版本控制管理的文件。<br/>
+<strong>tracked</strong>：已纳入版本控制管理的文件。<br/>
+<strong>unmodified</strong>：未做过修改，并且已经在版本控制管理中的文件。<br/>
+<strong>modified</strong>：做过修改的受版本控制管理的文件。<br/>
+<strong>staged</strong>：已放入暂存区的文件。untracked或者modified的文件，执行过git add后，就进入了暂存区。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/27/the-git-command/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/">Spring NamedParameterJdbcTemplate的内存泄漏问题</a></h1>
     
     
@@ -512,49 +564,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/06/new-blog-opening/">New Blog Opening</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-06T23:42:00+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2013</time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>新blog开张啦，以此博文作为纪念。</p>
-
-<p>这些年折腾了好几个博客了，但加起来的文字总共也没有多少，我的热乎劲也就在搭建那一刹那，特别是像在GAE上要自己去折腾整个过程。所以说，我并不热衷于写博客，而是中意于搭建这样一个小站的过程。说到原因呢，可能是因为哥曾经也是个web developer，但最近几年一直在做backend，把以前的frontend功底也丢的差不多了，所以每次遇到这样的机会，总是会让我心潮澎湃。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/06/new-blog-opening/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -583,11 +595,15 @@
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 6 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 6 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/the-git-command/">Git常用命令</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/">Spring NamedParameterJdbcTemplate的内存泄漏问题</a>
@@ -603,10 +619,6 @@
     
       <li class="post">
         <a href="/blog/2013/04/01/the-foundation-of-spring-batch/">The foundation of spring batch</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/26/common-format-of-csv-files/">Common Format of CSV Files</a>
       </li>
     
   </ul>
