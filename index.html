@@ -91,6 +91,46 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/06/01/the-tool-for-xml-compare/">XML文件比较工具</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-01T17:27:00+08:00" pubdate data-updated="true">Jun 1<span>st</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近公司的新产品准备上线，因为涉及到多个系统之间的集成，所以要做几轮的模拟测试，以保证系统间的稳定运行以及数据的准确性。对于其中一个Batch Job，我们需要生成多种XML给其它系统使用，这个Batch并不是全新的，在之前的版本就有，但是这次数据模型有变动，一些业务逻辑也有少许变动，但期望生成的数据是一样的，所以就需要比较两个版本的系统所生成的XML。</p>
+
+<p>现在真是越来越不喜欢XML，超过30M的文件，基本就不可能用NotePad++打开了（与我的机器配置太差也有关系）。通常对于一些小的文件，还可以用Beyond Compare之类的比较工具，而我们Batch生成的XML文件可能会超过100M，那就不可能通过一些桌面软件去做比较了，而且数量太大，肉眼比较的准确性也不能保证。</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/06/01/the-tool-for-xml-compare/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/05/27/the-git-command/">Git常用命令</a></h1>
     
     
@@ -514,56 +554,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/10/the-common-commands-of-octopress/">Octopress常用命令</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-10T17:34:00+08:00" pubdate data-updated="true">Mar 10<span>th</span>, 2013</time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Octopress经常使用到的命令，在这里做个总结，方面查阅。</p>
-
-<pre><code>rake new_post["title"]
-</code></pre>
-
-<p>创建一个post。</p>
-
-<pre><code>rake new_page[super-awesome/page.html]
-</code></pre>
-
-<p>创建一个page。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/10/the-common-commands-of-octopress/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -595,11 +585,15 @@
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 6 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/01/the-tool-for-xml-compare/">XML文件比较工具</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/05/27/the-git-command/">Git常用命令</a>
@@ -615,10 +609,6 @@
     
       <li class="post">
         <a href="/blog/2013/04/14/korn-shell-script/">Korn Shell Script</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/01/the-foundation-of-spring-batch/">The foundation of spring batch</a>
       </li>
     
   </ul>
