@@ -4,7 +4,7 @@
   <title><![CDATA[Chris's Blog]]></title>
   <link href="http://askcuix.github.io/atom.xml" rel="self"/>
   <link href="http://askcuix.github.io/"/>
-  <updated>2013-06-01T18:21:17+08:00</updated>
+  <updated>2013-06-09T15:45:26+08:00</updated>
   <id>http://askcuix.github.io/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -12,6 +12,81 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Mac使用技巧]]></title>
+    <link href="http://askcuix.github.io/blog/2013/06/09/the-mac-tips/"/>
+    <updated>2013-06-09T15:11:00+08:00</updated>
+    <id>http://askcuix.github.io/blog/2013/06/09/the-mac-tips</id>
+    <content type="html"><![CDATA[<p>一些常用的Mac使用技巧，记下来以方便查阅。</p>
+
+<h2>文件管理</h2>
+
+<p><strong>删除文件</strong>：command+delete</p>
+
+<p><strong>清空废纸篓(有确认)</strong>：shift+command+delete</p>
+
+<p><strong>清空废纸篓(无确认)</strong>：shift+option+command+delete</p>
+
+<p><strong>打开文件</strong>：command+o</p>
+
+<p><strong>全屏幕截图(图片默认存放在桌面)</strong>：shift+command+3</p>
+
+<p><strong>鼠标选取截图(图片默认存放在桌面)</strong>：shift+command+4</p>
+
+<p><strong>选取文本</strong>：用command+鼠标，可以选中不同位置的文本内容。 用option+鼠标，可以对文本进行块选。</p>
+
+<p><strong>粘贴纯文本</strong>：我们在网页或其他文档上复制文字的时候，会把文字格式一并复制下来，command+v会把文字格式都粘贴过去，如果我们只想粘贴纯文本，可以使用shift+option+command+v。</p>
+
+<p><strong>定位Spotlight搜索结果的文件夹</strong>：用Spotlight搜索的时候，搜到文件时，若需要打开该文件所在的文件夹，只需按住command键，点击文件即可打开Finder，并定位到该文件所在文件夹。</p>
+
+<!-- more -->
+
+
+<h2>字符输入</h2>
+
+<p><strong>美元$</strong>：shift+4<br/>
+<strong>美分¢</strong>：option+4<br/>
+<strong>英镑£</strong>：option+3<br/>
+<strong>人民币¥</strong>：option+y<br/>
+<strong>欧元€</strong>：shift+option+2<br/>
+<strong>波折号–</strong>：option+-或shift+option+-<br/>
+<strong>省略号…</strong>：option+;<br/>
+<strong>约等于≈</strong>：option+x<br/>
+<strong>度°</strong>：shift+option+8<br/>
+<strong>除号÷</strong>：option+/<br/>
+<strong>无穷大∞</strong>：option+5<br/>
+<strong>小于等于≤</strong>：option+,<br/>
+<strong>大于等于≥</strong>：option+.<br/>
+<strong>不等于≠</strong>：option+=<br/>
+<strong>圆周率Piπ</strong>：option+p<br/>
+<strong>正负±</strong>：shift+option+=<br/>
+<strong>平方根√</strong>：option+v<br/>
+<strong>总和∑</strong>：option+w<br/>
+<strong>商标Trademark™</strong>：option+2<br/>
+<strong>注册®</strong>：option+r<br/>
+<strong>版权©</strong>：option+g</p>
+
+<h2>系统管理</h2>
+
+<p><strong>du -sh *</strong>：查看某个目录下各个文件和子目录所占空间大小。</p>
+
+<p><strong>top</strong>：显示目前系统的进程情况、CPU使用情况、内存使用情况、磁盘使用情况和进程的详细列表等信息，输入? 会显示帮助信息，可以自定义top显示的信息，q退出监控界面。</p>
+
+<p><strong>查看电源的详细信息</strong>：按住option键，点击左上角的苹果－系统信息，在打开窗口的左侧栏中找到电源，点击即可查看电源的详细信息，主要的指标包括电池循环计数、状况等信息。</p>
+
+<p><strong>启用F功能键</strong>：打开系统偏好设置-键盘，选中“将 F1、F2 等键用作标准功能键”，启用此选项时，顶部一行按键将用作标准功能键 (F1 - F12)，而不执行音量控制等特殊功能。启用此选项后，若要使用这些按键的特殊功能，请按fn，比如请fn+f8来播放音乐。</p>
+
+<p><strong>执行root权限</strong>：在命令之前增加sudo指令，系统会提示你输入用户密码，执行root权限。</p>
+
+<p><strong>启用root用户</strong>：打开Finder，输入shift+command+g，在前往文件夹中输入：/System/Library/CoreServices，然后在目录中找到目录实用工具并打开，解开左下角的小锁，然后点击顶部编辑菜单，就会看到启用或停用root用户的选项了。然后我们在命令行下执行su -，就可以切换到root目录下，root的默认目录是/var/root。</p>
+
+<h2>TextMate</h2>
+
+<p><strong>转换字符为大写</strong>：control+u<br/>
+<strong>转换字符为小写</strong>：control+shift+u</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[XML文件比较工具]]></title>
