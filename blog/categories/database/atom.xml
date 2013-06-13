@@ -4,7 +4,7 @@
   <title><![CDATA[Category: DataBase | Chris's Blog]]></title>
   <link href="http://askcuix.github.io/blog/categories/database/atom.xml" rel="self"/>
   <link href="http://askcuix.github.io/"/>
-  <updated>2013-06-14T00:20:59+08:00</updated>
+  <updated>2013-06-14T00:23:33+08:00</updated>
   <id>http://askcuix.github.io/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -22,7 +22,7 @@
 
 <h2>Redis Key</h2>
 
-<p>Key不能太长，推荐的格式为：<em>&lt;object type>:&lt;id>:&lt;field></em>，用“<strong>:</strong>”分隔域，用“<strong>.</strong>)”作为单词间的连接。</p>
+<p>Key不能太长，推荐的格式为：<em>&lt;object type>:&lt;id>:&lt;field></em>，用“<strong>:</strong>”分隔域，用“<strong>.</strong>”作为单词间的连接。</p>
 
 <p>KEYS命令可返回匹配指定模式的key，模式支持通配符，具体可参考：<a href="http://redis.readthedocs.org/en/latest/key/keys.html">http://redis.readthedocs.org/en/latest/key/keys.html</a></p>
 
