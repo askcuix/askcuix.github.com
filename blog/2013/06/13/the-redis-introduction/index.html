@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The Redis Introduction - Chris's Blog</title>
+  <meta name="author" content="Chris">
+
+  
+  <meta name="description" content="The Redis Introduction">
+  <meta name="keywords" content="Redis, NoSQL, DataBase, Java, Windows, AOF, RDB, 事务, 数据结构">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://askcuix.github.io/blog/2013/06/13/the-redis-introduction/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Chris's Blog" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39173135-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Chris's Blog</a></h1>
+  
+    <h2>Keep Walking......</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://www.google.com" id="cse-search-box">
+    <fieldset role="search">
+      <input class="search" type="text" name="q" results="0"/>
+      <input type="hidden" name="cx" value="010330911247007516125:lvfpiqfzfs8" />
+      <input type="hidden" name="ie" value="UTF-8" />
+    </fieldset>
+</form>
+  
+  <script type="text/javascript">
+  (function() {
+    var job = document.createElement('script'); job.type = 'text/javascript'; job.async = true;
+    job.src = 'http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en';
+    var ss = document.getElementsByTagName('script'), s=ss[ss.length-1]; s.parentNode.insertBefore(job, s); s=null;
+  })();
+  </script>
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">The Redis Introduction</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-13T23:45:00+08:00" pubdate data-updated="true">Jun 13<span>th</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Redis是<strong>RE</strong>mote <strong>DI</strong>ctionary <strong>S</strong>erver的缩写，它采用了单请求处理线程的架构，避免了管理并发的复杂问题，也简化了实现，但同时也带来CPU的瓶颈，当单线程被阻塞时整个Redis都会停止响应。</p>
+
+<h2>Redis Key</h2>
+
+<p>Key不能太长，推荐的格式为：<em>&lt;object type>:&lt;id>:&lt;field></em>，用“<strong>:</strong>”分隔域，用“<strong>.</strong>)”作为单词间的连接。</p>
+
+<p>KEYS命令可返回匹配指定模式的key，模式支持通配符，具体可参考：<a href="http://redis.readthedocs.org/en/latest/key/keys.html">http://redis.readthedocs.org/en/latest/key/keys.html</a></p>
+
+<p>SORT命令可对集合按数字或字母顺序排序后返回或另存为list，还可以关联到外部key等。可参考：<a href="http://redis.readthedocs.org/en/latest/key/sort.html">http://redis.readthedocs.org/en/latest/key/sort.html</a></p>
+
+<p>Key超时操作常用的命令：<a href="http://redis.readthedocs.org/en/latest/key/expire.html">EXPIRE</a>、<a href="http://redis.readthedocs.org/en/latest/key/expireat.html">EXPIREAT</a>、<a href="http://redis.readthedocs.org/en/latest/key/persist.html">PERSIST</a>、<a href="http://redis.readthedocs.org/en/latest/key/ttl.html">TTL</a>。</p>
+
+<p>其它关于Key的常用命令：<a href="http://redis.readthedocs.org/en/latest/key/exists.html">EXISTS</a>、<a href="http://redis.readthedocs.org/en/latest/key/del.html">DEL</a>、<a href="http://redis.readthedocs.org/en/latest/key/randomkey.html">RANDOMKEY</a>、<a href="http://redis.readthedocs.org/en/latest/key/rename.html">RENAME</a>、<a href="http://redis.readthedocs.org/en/latest/key/renamenx.html">RENAMENX</a>、<a href="http://redis.readthedocs.org/en/latest/key/type.html">TYPE</a>。</p>
+
+<!-- more -->
+
+
+<h2>Redis Value的数据结构</h2>
+
+<h3>String</h3>
+
+<p>可以是任何种类的字符串（包括二进制数据），长度不能超过1GB。</p>
+
+<p>除了最基本的GET/SET，Redis还提供了一些简便的指令。</p>
+
+<p><a href="http://redis.readthedocs.org/en/latest/string/incr.html">INCR</a>/<a href="http://redis.readthedocs.org/en/latest/string/decr.html">DECR</a>/<a href="http://redis.readthedocs.org/en/latest/string/incrby.html">INCRBY</a>/<a href="http://redis.readthedocs.org/en/latest/string/incrbyfloat.html">INCRBYFLOAT</a>/<a href="http://redis.readthedocs.org/en/latest/string/decrby.html">DECRBY</a>：针对数字类型的字符串。若key不存在时创建key并设值为0。INCRBYFLOAT专门针对float类型的值，使用负数即可实现DECR的效果。</p>
+
+<p><a href="http://redis.readthedocs.org/en/latest/string/setex.html">SETEX</a>：即Set + Expire。</p>
+
+<p><a href="http://redis.readthedocs.org/en/latest/string/setnx.html">SETNX</a>：即SET if Not eXists。</p>
+
+<p><a href="http://redis.readthedocs.org/en/latest/string/getset.html">GETSET</a>：设置新值，并返回旧值。</p>
+
+<p><a href="http://redis.readthedocs.org/en/latest/string/mget.html">MGET</a>/<a href="http://redis.readthedocs.org/en/latest/string/mset.html">MSET</a>/<a href="http://redis.readthedocs.org/en/latest/string/msetnx.html">MSETNX</a>：GET/SET/SETNX的批量操作。</p>
+
+<p><a href="http://redis.readthedocs.org/en/latest/string/getbit.html">GETBIT</a>/<a href="http://redis.readthedocs.org/en/latest/string/setbit.html">SETBIT</a>/<a href="http://redis.readthedocs.org/en/latest/string/bitop.html">BITOP</a>/<a href="http://redis.readthedocs.org/en/latest/string/bitcount.html">BITCOUNT</a>：Redis BitMap的用法，使用场景可参考：<a href="http://blog.getspool.com/2011/11/29/fast-easy-realtime-metrics-using-redis-bitmaps/">http://blog.getspool.com/2011/11/29/fast-easy-realtime-metrics-using-redis-bitmaps/</a>。</p>
+
+<p><a href="http://redis.readthedocs.org/en/latest/string/append.html">APPEND</a>/<a href="http://redis.readthedocs.org/en/latest/string/setrange.html">SETRANGE</a>/<a href="http://redis.readthedocs.org/en/latest/string/getrange.html">GETRANGE</a>/<a href="http://redis.readthedocs.org/en/latest/string/strlen.html">STRLEN</a>：对字符串进行扩展、替换、截取和取长度，只适用于特定数据格式的字符串。</p>
+
+<h3>Hash</h3>
+
+<p>Key-HashMap结构，可以一次set，get多个属性。相比JSON格式的字符串，可以只读取/更新对象的某些属性，不用取回所有的属性，改完再写回去。</p>
+
+<p>可以通过该数据结构建立索引。比如User对象，通常都会使用id或name来查询，这样在插入User对象时：<em>set user:101 {&#8220;id&#8221;:101,&#8221;name&#8221;:&#8221;admin&#8221;}</em>， 同时再插入一条hash结构的索引：<em>hset user:index:name admin 101</em>。按name查询的时候，使用：<em>hget user:index:name admin</em> 就能取出对应的id。</p>
+
+<h3>List</h3>
+
+<p>List是一个双向链表，基于linked list，支持双向的Pop/Push，一般从左端Push，右端Pop。在左端或右端添加一个元素的复杂度是一样的。</p>
+
+<p>List的下标从0开始，从左到右计算，下标为负数时则从右到左。</p>
+
+<p>常用的命令：</p>
+
+<p><a href="http://redis.readthedocs.org/en/latest/list/lrem.html">LREM</a>：按值删除元素。<br/>
+<a href="http://redis.readthedocs.org/en/latest/list/linsert.html">LINSERT</a>：插在某个值的前后。<br/>
+<a href="http://redis.readthedocs.org/en/latest/list/lset.html">LSET</a>：按下标设置元素值。<br/>
+<a href="http://redis.readthedocs.org/en/latest/list/lindex.html">LINDEX</a>：按下标返回元素。<br/>
+<a href="http://redis.readthedocs.org/en/latest/list/lrange.html">LRANGE</a>：返回列表内一段下标的元素，可用于分页操作。<br/>
+<a href="http://redis.readthedocs.org/en/latest/list/ltrim.html">LTRIM</a>：限制List的大小。   <br/>
+<a href="http://redis.readthedocs.org/en/latest/list/blpop.html">BLPOP</a>/<a href="http://redis.readthedocs.org/en/latest/list/brpop.html">BRPOP</a>：阻塞版的pop命令，可用于Message Queue，当多个Client并发阻塞等待，有Element入列时谁先被阻塞谁先被服务。</p>
+
+<h3>Set</h3>
+
+<p>用于存储不重复的值，无序。还提供一些交集，并集，差集的集合操作。</p>
+
+<p><a href="http://redis.readthedocs.org/en/latest/set/sadd.html">SADD</a>/<a href="http://redis.readthedocs.org/en/latest/set/srem.html">SREM</a>/<a href="http://redis.readthedocs.org/en/latest/set/sismember.html">SISMEMBER</a>/<a href="http://redis.readthedocs.org/en/latest/set/scard.html">SCARD</a>/<a href="http://redis.readthedocs.org/en/latest/set/smove.html">SMOVE</a>/<a href="http://redis.readthedocs.org/en/latest/set/smembers.html">SMEMBERS</a>：基本操作。
+<a href="http://redis.readthedocs.org/en/latest/set/sinter.html">SINTER</a>/<a href="http://redis.readthedocs.org/en/latest/set/sinterstore.html">SINTERSTORE</a>/<a href="http://redis.readthedocs.org/en/latest/set/sunion.html">SUNION</a>/<a href="http://redis.readthedocs.org/en/latest/set/sunionstore.html">SUNIONSTORE</a>/<a href="http://redis.readthedocs.org/en/latest/set/sdiff.html">SDIFF</a>/<a href="http://redis.readthedocs.org/en/latest/set/sdiffstore.html">SDIFFSTORE</a>：集合操作。</p>
+
+<h3>Sorted Set</h3>
+
+<p>有序集合，元素放入集合时要提供该元素的分数。</p>
+
+<p><a href="http://redis.readthedocs.org/en/latest/sorted_set/zrange.html">ZRANGE</a>/<a href="http://redis.readthedocs.org/en/latest/sorted_set/zrevrange.html">ZREVRANGE</a>：按排名的上下限返回元素，正数与倒数。<br/>
+<a href="http://redis.readthedocs.org/en/latest/sorted_set/zrangebyscore.html">ZRANGEBYSCORE</a>/<a href="http://redis.readthedocs.org/en/latest/sorted_set/zrevrangebyscore.html">ZREVRANGEBYSCORE</a>：按分数的上下限返回元素，正数与倒数。<br/>
+<a href="http://redis.readthedocs.org/en/latest/sorted_set/zremrangebyrank.html">ZREMRANGEBYRANK</a>/<a href="http://redis.readthedocs.org/en/latest/sorted_set/zremrangebyscore.html">ZREMRANGEBYSCORE</a>：按排名/分数的上下限删除元素。<br/>
+<a href="http://redis.readthedocs.org/en/latest/sorted_set/zcount.html">ZCOUNT</a>：统计分数上下限之间的元素个数。<br/>
+<a href="http://redis.readthedocs.org/en/latest/sorted_set/zrank.html">ZRANK</a>/<a href="http://redis.readthedocs.org/en/latest/sorted_set/zrevrank.html">ZREVRANK</a>：显示某个元素的正倒序的排名。<br/>
+<a href="http://redis.readthedocs.org/en/latest/sorted_set/zscore.html">ZSCORE</a>/<a href="http://redis.readthedocs.org/en/latest/sorted_set/zincrby.html">ZINCRBY</a>：显示元素的分数/增加元素的分数。<br/>
+<a href="http://redis.readthedocs.org/en/latest/sorted_set/zadd.html">ZADD</a>/<a href="http://redis.readthedocs.org/en/latest/sorted_set/zrem.html">ZREM</a>/<a href="http://redis.readthedocs.org/en/latest/sorted_set/zcard.html">ZCARD</a>/<a href="http://redis.readthedocs.org/en/latest/sorted_set/zinterstore.html">ZINSERTSTORE</a>/<a href="http://redis.readthedocs.org/en/latest/sorted_set/zunionstore.html">ZUNIONSTORE</a>：集合操作，与Set相比，少了IsMember和差集运算。</p>
+
+<h2>事务</h2>
+
+<p>用<strong>MULTI</strong>(Start Transaction)、<strong>EXEC</strong>(Commit)、<strong>DISCARD</strong>(Rollback)实现。 在事务提交前，不会执行任何指令，只会把它们存到一个队列里。此时其他客户端可以对当前数据进行任意的操作。在事务提交时，批量执行所有指令，因为是单线程架构，在执行完事务内所有指令前是不可能再去同时执行其他客户端的请求的。</p>
+
+<p>Redis不保证所有指令同时成功或失败，只有决定是否开始执行全部指令的能力，没有执行到一半进行回滚的能力。</p>
+
+<p><strong>WATCH</strong>命令在事务提交时，如果Key的值已被别的客户端改变，则整个事务队列都不会被执行。</p>
+
+<h2>持久化</h2>
+
+<p>RDB与AOF完全独立运行。只有正确关闭服务器：<em>redis-cli shutdown</em>，才保证写RDB文件以及将AOF文件fsync到磁盘，不会丢失数据。 如果是<em>Ctrl+C</em>，或者 <em>kill -9</em> 就可能丢失。</p>
+
+<h3>RDB</h3>
+
+<p>整个内存的压缩过的Snapshot，可以配置复合的重写触发条件，默认是1分钟内改了1万次，或5分钟内改了10次，或15分钟内改了1次。</p>
+
+<p>先写到临时文件再重命名，这样外部程序对RDB文件的备份和传输过程是安全的。而且即使写新快照的过程中Server被强制关掉了，旧的RDB文件还在。</p>
+
+<p>可配置是否进行压缩，压缩方法是字符串的LZF算法，以及将string形式的数字变回int形式存储。</p>
+
+<h3>AOF</h3>
+
+<p>append only的操作日志，记录所有有效的写操作，格式就是Redis协议的纯文本文件。</p>
+
+<p>如果使用了AOF，重启时只会从AOF文件载入数据，不会再管RDB文件。</p>
+
+<p>RDB不会实时写入数据，而且如果同时使用两者，但服务器重启只会找AOF文件。不建议只使用AOF，因为RDB更适合用于备份数据库，快速重启。</p>
+
+<h2>Windows版本</h2>
+
+<p>Redis本身并未提供Windows版本，微软技术小组采用LibUV成功将Redis移植到了windows平台，这样就方便了应用的本地开发调试。</p>
+
+<p>目前的稳定版是2.6版本，支持Lua脚本：<a href="https://github.com/MSOpenTech/redis">https://github.com/MSOpenTech/redis</a></p>
+
+<p>编译好的可执行文件：<a href="https://github.com/MSOpenTech/redis/tree/2.6/bin/release">https://github.com/MSOpenTech/redis/tree/2.6/bin/release</a></p>
+
+<h2>Resources</h2>
+
+<p>Redis的设计与实现：<a href="http://www.redisbook.com/en/latest/">http://www.redisbook.com/en/latest/</a><br/>
+The Little Redis Book：<a href="http://openmymind.net/2012/1/23/The-Little-Redis-Book/">http://openmymind.net/2012/1/23/The-Little-Redis-Book/</a><br/>
+Redis 命令参考：<a href="http://redis.readthedocs.org/en/latest/">http://redis.readthedocs.org/en/latest/</a> <br/>
+NoSQLFan - Redis资料汇总专题：<a href="http://blog.nosqlfan.com/html/3537.html">http://blog.nosqlfan.com/html/3537.html</a><br/>
+Redis响应延迟问题排查：<a href="http://www.oschina.net/translate/redis-latency-problems-troubleshooting">http://www.oschina.net/translate/redis-latency-problems-troubleshooting</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Chris</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-13T23:45:00+08:00" pubdate data-updated="true">Jun 13<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/database/'>DataBase</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/06/09/the-mac-tips/" title="Previous Post: Mac使用技巧">&laquo; Mac使用技巧</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <img src="/images/chris.png" width="128" height="178" alt="Chris">
+  <p>
+	  <a href="/about">Chris</a> <br/>
+      Java Developer, @Guangzhou
+  </p>
+</section>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/askcuix@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/database'>DataBase ( 1 )</a></li><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mac'>Mac ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/13/the-redis-introduction/">The Redis Introduction</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/09/the-mac-tips/">Mac使用技巧</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/01/the-tool-for-xml-compare/">XML文件比较工具</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/the-git-command/">Git常用命令</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/">Spring NamedParameterJdbcTemplate的内存泄漏问题</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Links</h1>
+    <ul>
+    	<li><a href="http://askcuix.appspot.com" target="_blank">Chris @GAE</a></li>
+		<li><a href="https://github.com/askcuix" target="_blank">Chris @GitHub</a></li>
+		<li><a href="http://mindon.github.com" target="_blank">Mindon.IDEA</a></li>
+		<li><a href="http://aleung.github.com/blog/" target="_blank">Good good study, day day up</a></li>
+    </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Chris -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'askcuix';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://askcuix.github.io/blog/2013/06/13/the-redis-introduction/';
+        var disqus_url = 'http://askcuix.github.io/blog/2013/06/13/the-redis-introduction/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+</body>
+</html>

@@ -91,6 +91,46 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/03/15/supplementary-characters-in-java/">Supplementary Characters in Java</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-15T23:37:00+08:00" pubdate data-updated="true">Mar 15<span>th</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>工作中经常会涉及到文件处理，而fixlength类型的文件又是一种很常见的格式。众所周知，fixlength类型的数据就是每个字段对应一行数据中固定长度的字符，每个字段都有对应的start offset和end offset，用实现来表示就是String.substring(start, end)，所以start和end的位置是至关重要的，一个字段对应错了，后面的字段就全错了。</p>
+
+<p>在Java中使用UTF-16来表示unicode字符，一个字符就是16 bit，像String.length()就是返回有多少个16 bit。unicode支持的字符的code point范围是U+0000到U+10FFFF，这其中包括基本字符（BMP）和补充字符（supplementary character），基本字符时从U+0000到U+FFFF，补充字符从U+10000到U+10FFFF。</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/03/15/supplementary-characters-in-java/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/03/10/the-syntax-of-markdown/">The Syntax of Markdown</a></h1>
     
     
@@ -253,11 +293,15 @@
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mac'>Mac ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/database'>DataBase ( 1 )</a></li><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mac'>Mac ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/13/the-redis-introduction/">The Redis Introduction</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/06/09/the-mac-tips/">Mac使用技巧</a>
@@ -273,10 +317,6 @@
     
       <li class="post">
         <a href="/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/">Spring NamedParameterJdbcTemplate的内存泄漏问题</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/16/garbage-collection-and-memory-allocation/">垃圾收集器及内存分配</a>
       </li>
     
   </ul>

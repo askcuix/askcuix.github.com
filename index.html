@@ -91,6 +91,58 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/06/13/the-redis-introduction/">The Redis Introduction</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-13T23:45:00+08:00" pubdate data-updated="true">Jun 13<span>th</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Redis是<strong>RE</strong>mote <strong>DI</strong>ctionary <strong>S</strong>erver的缩写，它采用了单请求处理线程的架构，避免了管理并发的复杂问题，也简化了实现，但同时也带来CPU的瓶颈，当单线程被阻塞时整个Redis都会停止响应。</p>
+
+<h2>Redis Key</h2>
+
+<p>Key不能太长，推荐的格式为：<em>&lt;object type>:&lt;id>:&lt;field></em>，用“<strong>:</strong>”分隔域，用“<strong>.</strong>)”作为单词间的连接。</p>
+
+<p>KEYS命令可返回匹配指定模式的key，模式支持通配符，具体可参考：<a href="http://redis.readthedocs.org/en/latest/key/keys.html">http://redis.readthedocs.org/en/latest/key/keys.html</a></p>
+
+<p>SORT命令可对集合按数字或字母顺序排序后返回或另存为list，还可以关联到外部key等。可参考：<a href="http://redis.readthedocs.org/en/latest/key/sort.html">http://redis.readthedocs.org/en/latest/key/sort.html</a></p>
+
+<p>Key超时操作常用的命令：<a href="http://redis.readthedocs.org/en/latest/key/expire.html">EXPIRE</a>、<a href="http://redis.readthedocs.org/en/latest/key/expireat.html">EXPIREAT</a>、<a href="http://redis.readthedocs.org/en/latest/key/persist.html">PERSIST</a>、<a href="http://redis.readthedocs.org/en/latest/key/ttl.html">TTL</a>。</p>
+
+<p>其它关于Key的常用命令：<a href="http://redis.readthedocs.org/en/latest/key/exists.html">EXISTS</a>、<a href="http://redis.readthedocs.org/en/latest/key/del.html">DEL</a>、<a href="http://redis.readthedocs.org/en/latest/key/randomkey.html">RANDOMKEY</a>、<a href="http://redis.readthedocs.org/en/latest/key/rename.html">RENAME</a>、<a href="http://redis.readthedocs.org/en/latest/key/renamenx.html">RENAMENX</a>、<a href="http://redis.readthedocs.org/en/latest/key/type.html">TYPE</a>。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/06/13/the-redis-introduction/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/06/09/the-mac-tips/">Mac使用技巧</a></h1>
     
     
@@ -530,46 +582,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/15/supplementary-characters-in-java/">Supplementary Characters in Java</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-15T23:37:00+08:00" pubdate data-updated="true">Mar 15<span>th</span>, 2013</time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>工作中经常会涉及到文件处理，而fixlength类型的文件又是一种很常见的格式。众所周知，fixlength类型的数据就是每个字段对应一行数据中固定长度的字符，每个字段都有对应的start offset和end offset，用实现来表示就是String.substring(start, end)，所以start和end的位置是至关重要的，一个字段对应错了，后面的字段就全错了。</p>
-
-<p>在Java中使用UTF-16来表示unicode字符，一个字符就是16 bit，像String.length()就是返回有多少个16 bit。unicode支持的字符的code point范围是U+0000到U+10FFFF，这其中包括基本字符（BMP）和补充字符（supplementary character），基本字符时从U+0000到U+FFFF，补充字符从U+10000到U+10FFFF。</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/15/supplementary-characters-in-java/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -601,11 +613,15 @@
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mac'>Mac ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/database'>DataBase ( 1 )</a></li><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mac'>Mac ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/13/the-redis-introduction/">The Redis Introduction</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/06/09/the-mac-tips/">Mac使用技巧</a>
@@ -621,10 +637,6 @@
     
       <li class="post">
         <a href="/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/">Spring NamedParameterJdbcTemplate的内存泄漏问题</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/16/garbage-collection-and-memory-allocation/">垃圾收集器及内存分配</a>
       </li>
     
   </ul>
