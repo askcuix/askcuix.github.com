@@ -1,0 +1,706 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Scala学习笔记 - Chris's Blog</title>
+  <meta name="author" content="Chris">
+
+  
+  <meta name="description" content="The Scala Notes">
+  <meta name="keywords" content="Java, JVM, Scala, Scala编程, 函数式语言, 静态语言，闭包">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://askcuix.github.io/blog/2013/06/16/the-scala-notes/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Chris's Blog" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39173135-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Chris's Blog</a></h1>
+  
+    <h2>Keep Walking......</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://www.google.com" id="cse-search-box">
+    <fieldset role="search">
+      <input class="search" type="text" name="q" results="0"/>
+      <input type="hidden" name="cx" value="010330911247007516125:lvfpiqfzfs8" />
+      <input type="hidden" name="ie" value="UTF-8" />
+    </fieldset>
+</form>
+  
+  <script type="text/javascript">
+  (function() {
+    var job = document.createElement('script'); job.type = 'text/javascript'; job.async = true;
+    job.src = 'http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en';
+    var ss = document.getElementsByTagName('script'), s=ss[ss.length-1]; s.parentNode.insertBefore(job, s); s=null;
+  })();
+  </script>
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Scala学习笔记</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-16T22:34:00+08:00" pubdate data-updated="true">Jun 16<span>th</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>断断续续总算是读完了《Scala程序设计 - Java虚拟机多核编程实战》，习惯了Java中规中矩的语言规范，面对这种灵活的语法，着实有点不知所措，之前学习Python的时候，也有过类似的感受，不过这次学习Scala的感觉更强烈点。这本薄薄的不到两百页的书，硬是让我看了个把月，但也总算是对Scala有了初步的认识。对于这本书，只能算是入门书籍，很多东西都只是提到，但讲的不够详细。下面是学习过程中记下来的一些笔记，之后再对一些重要语法详细了解吧。</p>
+
+<h2>val vs. var</h2>
+
+<p>用val定义的变量是不可变的，用var定义的变量是可变的。在Scala中应尽量使用val以提升不变性。</p>
+
+<h2>遍历</h2>
+
+<p>RichInt中的两个方法to和until都返回一个Range的实例。<br/>
+<strong>to()</strong> 产生的范围包含了上界和下界。</p>
+
+<pre><code>i &lt;- 1 to 3
+</code></pre>
+
+<p><strong>until()</strong> 产生的范围排除上界。</p>
+
+<pre><code>i &lt;- 1 until 3
+</code></pre>
+
+<p><strong>foreach()</strong>属于Range类，以一个函数值作为参数。</p>
+
+<pre><code>(1 to 3).foreach(i =&gt; print(i))
+</code></pre>
+
+<p><strong>&lt;-</strong> 左边为定义的val变量，右边为生成器表达式。<br/>
+<strong>=></strong> 左边为参数列表，右边为实现。</p>
+
+<!-- more -->
+
+
+<h2>点和括号</h2>
+
+<p>如果方法有0或1个参数，点和括号是可选的，如果参数多于一个，则必须使用括号，但点仍然是可选的。</p>
+
+<pre><code>a+b  --&gt; a.+(b)
+1 to 3 --&gt;  1.to(3)
+</code></pre>
+
+<h2>元组</h2>
+
+<p>元组是一个不变的对象序列，可用逗号分隔的值进行创建。如：<em>(&#8220;a&#8221;, &#8220;b&#8221;, &#8220;c&#8221;)</em></p>
+
+<p>元组元素可以同时赋给多个var或val。如：<em>val (name, age, sex) = getPerson()</em></p>
+
+<p>将元组赋给数量不一致的变量会出现异常，可以通过<strong>._<seq></strong>来访问单个元素。如：</p>
+
+<pre><code>val info = getPerson();
+print(info._1) //first element
+print(info._2) //second element
+</code></pre>
+
+<h2>字符串</h2>
+
+<p>三个双引号之间的字符串可作为多行字符串。如：<em>&#8221;&#8221;&#8220;multiple line string&#8221;&#8220;&#8221;</em><br/>
+多行字符串中允许嵌入双引号，多行字符串会保留字符串的原有格式。<br/>
+stripMargin()可用于去除先导符前所有的空白或控制字符，默认先导符为“|”。</p>
+
+<h2>类</h2>
+
+<p>在Scala里，类、字段和方法默认是<strong>public</strong>，无需显示声明。</p>
+
+<p><strong>protected</strong>类只可以由子类访问，且子类只可以访问本类的protected成员。</p>
+
+<p><strong>return</strong>是可选的，方法调用会自动返回最后求值的表达式。若使用了return，则必须显示定义返回类型。</p>
+
+<p>如果用&#8221;<strong>=</strong>&#8220;定义方法，Scala可推演返回类型，否则该方法返回类型为void。</p>
+
+<p>分号是可选的，如果在一行内放置多条语句，可以用分号进行分隔。</p>
+
+<p>方法若没有参数，可以省略方法定义中的括号。若构造函数没有参数，new对象后面的括号也可以省略。</p>
+
+<p>给字段加上<strong>@scala.reflect.BeanProperty</strong>注解，即可以生成JavaBean风格的getter/setter。</p>
+
+<p>Scala默认会导入两个包：<strong>java.lang</strong>和<strong>scala</strong>，和一个对象：<strong>scala.Predef</strong>。</p>
+
+<p>赋值结果是Unit类型，因此不可以多重赋值。如：</p>
+
+<pre><code>a = b  // return Unit, not a
+a = b = c // throw error: type mismatch, found Unit, require Int
+</code></pre>
+
+<p><strong>==</strong>对所有类型都是基于值的比较，而非引用的比较。<strong>eq()</strong>用于引用的比较。</p>
+
+<p>变量赋值时的“<strong>_</strong>”代表该变量类型的默认值：Int为<em>0</em>，Double为<em>0.0</em>，引用类型为<em>null</em>。</p>
+
+<p>import语句里的“<strong>_</strong>”等价于Java中的“<strong>*</strong>”。如果“_”是跟在类名后，则导入类的所有成员，等价于Java中的static import。</p>
+
+<p>主构造函数放在类定义中，若参数声明为val，则定义为private final类型；若参数声明为var，则定义为private类型；若参数既不是val，也不是var，则创建一个private字段以及private的getter/setter，就不能在类的外部访问该参数。</p>
+
+<p>除主构造函数外，还可以通过<strong>this()</strong>定义两个或多个副构造函数。副构造函数的第一条语句必须是调用主构造函数，或调用另外一个副构造函数。如：</p>
+
+<pre><code>class Person(val firstName: String, val lastName: String) {
+    private var gender: String = _
+
+
+    def this (firstName: String, lastName: String, sex: String) {
+         this (firstName, lastName)
+         gender = sex
+    }
+}
+</code></pre>
+
+<p>类里定义的var字段会映射为一个private字段，并提供对应的getter/setter，字段上附加的访问权限会加到访问方法getter/setter上。</p>
+
+<p>类继承时，重写方法必须使用<strong>override</strong>关键字，只有主构造函数才能通过override关键字往基类构造函数中传参数。如：</p>
+
+<pre><code>class Vehicle(val id: Int, val year: Int){
+    override def toString() : String = "ID: " + id + " Year: " + year
+}
+
+class Car(override val id: Int, override val year: Int, var fuelLevel: Int) extends Vehicle(id, year) {
+    override def toString() : String = super.toString() + " Fuel Level: " + fuelLevel
+}
+</code></pre>
+
+<p>创建单例对象要用<strong>object</strong>关键字，而非class。因为单例对象无法初始化，所以不能给主构造函数传递参数。</p>
+
+<pre><code>class Marker(val color: String){
+    override def toString() : String = "maker color " + color
+}
+
+object MarkerFactory {
+   private val markers = Map(
+       "red" -&gt; new Marker("red")
+   )
+
+   def getMarker(color: String) = if (markers.contains(color)) markers(color) else null
+}
+</code></pre>
+
+<p>上例中依然可以跳过MarkerFactory，直接创建Marker实例。</p>
+
+<p>在Scala中可以创建一个关联到类上的单例，单例同类共享相同的名字，称为<strong>伴生对象</strong>，对应的类称为<strong>伴生类</strong>。类和伴生对象之间可以互相访问彼此的private字段和方法，可以把类的构造函数标记为private，这样就只可以通过伴生对象获取实例。每个类都可以有伴生对象，它们跟伴生类写在同一个文件中。如：</p>
+
+<pre><code>class Marker private (val color: String){
+    override def toString() : String = "maker color " + color
+}
+
+object Marker {
+   private val markers = Map(
+       "red" -&gt; new Marker("red")
+   )
+
+   def getMarker(color: String) = if (markers.contains(color)) markers(color) else null
+}
+</code></pre>
+
+<p>Scala中没有静态字段和静态方法，伴生对象中的字段和方法可作为替代实现。</p>
+
+<p>将创建伴生类的实例方法命名为<strong>apply()</strong>，可以更加容易获取实例，这是Scala提供的语法糖。在上例中需要通过 <em>Marker getMarker &#8220;red&#8221;</em> 来获取，若将getMarker改名为apply，则可以直接通过<em>Marker(&#8220;red&#8221;)</em>来获取。</p>
+
+<pre><code>def apply(color: String) = if (markers.contains(color)) markers(color) else null
+</code></pre>
+
+<h3>Nothing</h3>
+
+<p>Nothing是所有类的子类。</p>
+
+<h3>Any</h3>
+
+<p>Any是所有类的父类。Any的直接子类是AnyVal和AnyRef，AnyVal是所有可以映射为Java基本类型的类的父类，AnyRef是所有引用类型的父类，可直接映射为Java的Object。</p>
+
+<h3>Option</h3>
+
+<p>用于强制检查实例是否存在。getOrElse()可处理结果不存在的情况。</p>
+
+<h2>可变参数(vararg)</h2>
+
+<p>方法参数在类型之后使用“*”，则标识该参数为可变数目实参。可变参数会当作数组处理，但不可传入数组作为实参。若相使用数组中的值作为可变实参，可以使用“<strong>_*</strong>”展开数组。如：</p>
+
+<pre><code>def max(values: Int*) = values.foldLeft(values(0)) { Math.max }
+val numbers = Array(2, 4, 3, 7, 6)
+println(max(numbers: _*))
+</code></pre>
+
+<h2>参数化类型(Parameterized Type)</h2>
+
+<p>Scala使用“<strong>&lt;:</strong>”来定义参数化类型。如 <em>T&lt;:Pet</em> 表示T为Pet的子类。也可以使用“<strong>>:</strong>”，如 <em>T>:Dog</em> 表示T为Dog的父类。</p>
+
+<pre><code>def playWithPets[T &lt;: Pet](pets: Array[T]) = println("……….")
+</code></pre>
+
+<p>参数化类型使用“<strong>+T</strong>”表示允许协变，即可接收某个类型或其父类。</p>
+
+<p>参数化类型使用”<strong>-T</strong>“表示允许逆变，即可接收某个类型或其子类。</p>
+
+<h2>Curry化</h2>
+
+<p>将函数从接收多个参数转变为接收多个参数列表，以减少传递函数值。如：</p>
+
+<p>原函数：</p>
+
+<pre><code>def foo(a: Int, b: Int, operation: (Int, Int) =&gt; Int) ： Int = {}
+</code></pre>
+
+<p>Curry化：</p>
+
+<pre><code>def foo(a: Int)(b: Int)(operation: (Int, Int) =&gt; Int) : Int = {}
+</code></pre>
+
+<p>调用如下，函数值不需要以参数的形式写在括号中了，这种形式更优雅。</p>
+
+<pre><code>val sum = foo(1)(2) { (c, d) =&gt; c + d}
+</code></pre>
+
+<h2>Trait</h2>
+
+<p>Trait里定义和初始化的val和var会在混入trait的类的内部得到实现。如果类没有继承其它类，则可以使用<strong>extends</strong>关键字混入trait；如果类已继承了其它类，则可以使用<strong>with</strong>关键字混入一个或多个trait。</p>
+
+<pre><code>trait Friend {
+    val name: String
+    def listen() = println("Your friend " + name + " is listening")
+}
+
+class Human(val name: String) extends Friend
+
+class Dog(val name: String) extends Animal with Friend
+</code></pre>
+
+<p>Trait会被编译成Java的接口，还有对应的实现类，里面包含了trait已实现的方法。</p>
+
+<p>Trait需要混入类实现未初始化的变量和值，trait的构造器不能有任何参数。</p>
+
+<p>Trait也可以在实例中进行混入。如：</p>
+
+<pre><code>class Cat(val name: String) extends Animal
+
+val snowy = new Cat("Snowy") with Friend
+</code></pre>
+
+<p>当Trait用于装饰对象时，trait只能混入继承自trait父类的类。在trait里，super并不是对基类的调用，而是对其左边混入的trait的调用，如果这个trait已经是最左的trait，则调用就会解析成混入这个trait的类的方法。</p>
+
+<pre><code>abstract class Check {
+    def check() : String = "Checked Details…..."
+}
+
+trait CreditCheck extends Check {
+    override def check() : String = "Checked Credit……" + super.check()
+}
+
+trait EmploymentCheck extends Check {
+    override def check() : String = "Checked Employment….." + super.check()
+}
+
+val emplomentApp = new Check with EmploymentCheck with CreditCheck
+println(emplomentApp check)
+</code></pre>
+
+<p>打印结果：</p>
+
+<p><em>Checked Credit……Checked Employment….Checked Details……</em></p>
+
+<p>若trait的基类的方法是抽象的，则trait在继承这个类时，需要将该方法声明为abstract override。这个方法的最终实现由混入这个trait的类提供。</p>
+
+<pre><code>abstract class Writer {
+    def writeMessage(message: String)
+}
+
+trait UpperCaseWriter extends Writer {
+    abstract override def writeMessage(message: String) = super.writeMessage(message.toUpperCase)
+}
+
+class StringWriterDelegate extends Writer {
+    val writer = new java.io.StringWriter
+
+    def writeMessage(message: String) = writer.write(message)
+    override def toString() : String = writer.toString 
+}
+
+val writerTest = new StringWriterDelegate with UpperCaseWriter
+writerTest writeMessage "String writer test"
+println(writerTest)
+</code></pre>
+
+<p>打印结果：</p>
+
+<p><em>STRING WRITER TEST</em></p>
+
+<h2>隐式转换</h2>
+
+<p>若需转换数据类型，可定义一个转换方法，并将该方法标记为implicit，该方法需要在变量使用的当前范围内可见（通过当前import可见，或位于当前文件）。</p>
+
+<p>在Predef对象中，Scala已经定义了一些隐式转换，且默认导入它们。Scala一次最多应用一个隐式转换。</p>
+
+<h2>集合类</h2>
+
+<p>Scala的集合类包括：<strong>List</strong>, <strong>Set</strong>和<strong>Map</strong>，除了List外，其它两种集合同时提供了可变和不可变的两个版本，默认使用不可变的集合类。Predef对象为集合类提供的别名指向不可变的实现。</p>
+
+<p>可变版本：<em>scala.collection.mutable</em><br/>
+不可变版本：<em>scala.collection.immutable</em></p>
+
+<p>若需要修改集合且对集合的所有操作都在一个线程里，则可以选择可变集合类。</p>
+
+<p><strong>_</strong>：用于表示遍历集合时的每个元素。</p>
+
+<h3>Set</h3>
+
+<p><strong>filter()</strong>：用于过滤Set中的数据。<br/>
+<strong>mkString()</strong>：为Set中的每个元素创建了字符串，然后用参数字符串将结果连接起来。与apache common-lang中StringUtils的join方法作用相同。<br/>
+<strong>++()</strong>：合并两个Set成一个新的Set。<br/>
+<strong>**()</strong>：执行交集运算。<br/>
+<strong>map()</strong>：对每个元素应用给定的函数值，将结果收集到一个新的Set中。<br/>
+<strong>toArray()</strong>：将Set中的元素复制到数组中，以通过索引来访问Set中的元素。<br/>
+<strong>foreach()</strong>：迭代Set中的元素。</p>
+
+<h3>Map</h3>
+
+<p>key与value之间使用<strong>-></strong>。如：<em>val feeds = Map(&#8220;Scala&#8221; -> &#8220;www.scala-lang.org&#8221;)</em></p>
+
+<p><strong>filterKeys()</strong>：对Key进行过滤。<br/>
+<strong>filter()</strong>：对Key和Value进行过滤。提供给filter()的函数值接收一个(key, value)元组。如：</p>
+
+<pre><code>val result = feeds filter { element =&gt; 
+    val (key, value) = element 
+    (key startsWith "S") &amp;&amp; (value contains "lang") 
+}
+</code></pre>
+
+<p><strong>get()</strong>：用给定的Key获取Value。由于给定的Key可能没有对应的Value，所以该方法的返回类型是Option[T]，结果可能是Some[T]或None，T为Value的类型。<br/>
+<strong>apply()</strong>：对类或对象使用括号时，即调用该方法。用于获取给定Key对应的Value，若没有对应的Value，则抛出异常，应将该方法放在try-catch中。<br/>
+<strong>update()</strong>：更新Map，并返回一个新的Map。有一种简写的方式：X() = b，等价于X.update(b)，若参数多于一个，则将最后一个参数之外的所有参数放在括号里，X(a) = b 等价于X.update(a, b)。也可以将Map定义为可变容器scala.collection.mutable.Map，则可以直接更新。</p>
+
+<h3>List</h3>
+
+<p>List只有不可变实现。</p>
+
+<p><strong>head()</strong>：可快速访问List的第一个元素。<br/>
+<strong>tail()</strong>：用于访问第一个元素之外的其它元素。访问最后一个元素需要遍历List，因此相比较head()，该操作的代价较大。<br/>
+<strong>::()</strong>：将元素添加在第一个元素之前。a :: list，即在list前添加a。该方法的完整表示：<em>list.::(a)</em>。<br/>
+<strong>:::()</strong>：将一个list附加到另一个list之前。<em>list ::: listA</em>，即在listA前添加list。由于List是不可变的，所以这两个List都不会改变，会创建一个新的List并返回。将一个元素或List添加到另一个List的后面，实际上是调用后面那个List的前缀运算符，由于访问List的头元素比遍历到最后一个元素快的多，因此这种方式的性能会更好。<br/>
+<strong>filter()</strong>：对List进行过滤。<br/>
+<strong>forall()</strong>：检查List中的元素是否都满足指定的条件。<br/>
+<strong>exists()</strong>：检查List中是否存在满足指定条件的元素。<br/>
+<strong>map()</strong>：对每个元素应用给定的函数值，将结果收集到一个新的List中。 <br/>
+<strong>mkString()</strong>：将List中的元素用参数字符串连接起来。与apache common-lang中StringUtils的join方法作用相同。<br/>
+<strong>foldLeft()</strong>：从List的最左端开始为每个元素调用给定的函数值。它会传递两个参数给函数值，第一个参数是对之前元素执行函数值的部分结果，初始值为方法的参数，第二个参数是List的元素。该方法的另一种表示：<strong>/:()</strong>。</p>
+
+<pre><code>val total = feeds.foldLeft(0) { (total, feed) =&gt; total + feed.length }
+</code></pre>
+
+<p>等价于</p>
+
+<pre><code>val total = (0 /: feeds) { (total, feed) =&gt; total + feed.length }
+</code></pre>
+
+<p><strong>foldRight()</strong>：与foldLeft()的操作相同，但是从List的最右端开始。该方法的另一种表示：<strong>\:()</strong>。</p>
+
+<h2>case表达式</h2>
+
+<p>case表达式通常与match一起使用做模式匹配。case会按照顺序自上而下进行比较。</p>
+
+<p><strong>_</strong>用作通配符，在所有指定的case都不匹配的情况下，作为默认处理，否则会抛出MatchError异常。</p>
+
+<p><strong>_*</strong>用作匹配List时，除去指定元素之外的所有元素。若需要引用这些元素，可以用@放在_*和变量名之间，如：</p>
+
+<pre><code>case List("apple", "orange", otherFruits @ _*) =&gt; println("apples, oranges, and " + otherFruits)
+</code></pre>
+
+<p>case语句可以根据类型进行匹配，还可以使用guard语句，用if从句表示。</p>
+
+<pre><code>def process(input: Any) {
+    input match {
+         case (a: Int, b: Int) =&gt; print("Processing (int, int)…..")
+         case (a: Double, b: Double) =&gt; print("Processing (double, double)…..")
+         case msg : Int if (msg &gt; 1000) =&gt; print("Processing int &gt; 1000")
+         case msg : Int =&gt; print("Processing int…..")
+         case _ =&gt; printf("Can't handle %s… ", input)
+    }
+}
+</code></pre>
+
+<p>case表达式中，模式变量要以小写字母开头，常量要以大写字母开头，否则无法通过编译。</p>
+
+<p><strong>sealed abstract</strong>用于告知Scala除该文件中已有的类之外，不会再有其它的类作为case类。若case表达式没有包含所有的case类，则会在编译时遇到warning。</p>
+
+<p>case类若没有参数，在调用case表达式的方式时，也需要使用括号。否则参数就不是case类的实例，而是它的伴生对象。</p>
+
+<p>定义Extractor可以在case表达式中匹配任意模式。unapply()方法用于接收要匹配的值。Extractor方法中的参数并不是传入的实参，而是用于接收从方法中返回的值。Extractor方法中的参数还可以引用另外一个Extractor方法用以验证返回的值，在参数和调用的Extractor方法之间使用@符合。</p>
+
+<h2>正则表达式</h2>
+
+<p>使用<em>scala.util.matching</em>包中的<strong>Regex</strong>类的实例进行匹配。</p>
+
+<p>String的<strong>r()</strong>方法会将String转换成RichString，然后调用该方法并返回Regex实例。</p>
+
+<p>正则表达式可直接在case表达式中作为Extractor使用。正则表达式中每个放在括号里的匹配都展开到一个模式变量中，如：<em>&#8220;(S|s)cala&#8221;.r</em>的unapply()方法会返回Option[String]，<em>&#8220;(S|s)(cala)&#8221;.r</em>的unapply()方法会返回Option[String, String]。</p>
+
+<p><strong>findFirstIn()</strong>：用于查找第一个正则表达式的匹配。<br/>
+<strong>findAllIn()</strong>：用于查找正则表达式的所有匹配，并返回List结果。<br/>
+<strong>replaceFirstIn()</strong>：用于替换第一个正则表达式的匹配。<br/>
+<strong>replaceAllIn()</strong>：用于替换所有正则表达式的匹配。</p>
+
+<h2>actor模型</h2>
+
+<p>actor提供了一种基于事件的轻量级线程。使用<em>scala.actors.Actor</em>伴生对象的<strong>actor()</strong>方法就可以创建一个actor。它接受一个函数值/闭包做参数，一创建好就开始运行。用<strong>!()</strong>方法给actor发消息，用<strong>reveive()</strong>方法从actor接收消息，通常用模式匹配处理接收到的消息。</p>
+
+<p>Scala的Actor是个trait，混入Actor的类必须实现<strong>act()</strong>。start()方法用于启动actor并调用act()方法，没启动之前给actor发送的消息会进入队列。exit()方法用于停止actor，该方法会抛出异常，以终止当前线程的执行。</p>
+
+<p>如果无需控制何时启动actor，则可以使用actor()方法创建actor。在actor中将消息委托给另一个actor，可以并发的处理多个请求。</p>
+
+<p>receive()会造成程序阻塞，指导收到应答为止。receiveWithin()方法接收一个timeout参数，若超时时限内未收到消息，receiveWithin()会收到一个TIMEOUT消息。</p>
+
+<p>使用<strong>SingleThreadedScheduler</strong>可以让Scala在主线程里运行actor，通过设置 <em>Scheduler.impl = new SingleThreadedScheduler</em>，就可以控制整个应用的actor调度策略。通过继承Actor trait，并改写scheduler()方法，可以控制线程是否运行在主线程中。</p>
+
+<h2>与Java互操作</h2>
+
+<p>若要在编译过的Scala或Java代码里使用Scala类，则必须编译Scala文件。</p>
+
+<p>若Java代码中的方法或字段的名字与Scala的关键字有冲突，在调用时会导致Scala编译器死掉。可将冲突的变量名或方法名放在反引号中，以避免该问题。</p>
+
+<p>Java暂不支持闭包，因此若Scala要提供给Java使用，则应避免使用闭包，或同时提供普通函数。</p>
+
+<p>trait若没有方法实现，则可在Java中当作接口使用；若trait中有方法实现，则只可以在Java中持有该引用。</p>
+
+<p>Scala的单例对象，在Java中可以像有static方法的Java类一样使用。</p>
+
+<p>Scala会为同名类的伴生对象创建两个类，若类名为Buddy，则一个伴生类Buddy，和一个伴生对象类Buddy$。在Java中访问伴生类可以直接使用类的名字，访问伴生对象则需要使用MODULE$，如Buddy$.MODULE$。</p>
+
+<p>Scala不支持throws，若Java中继承的Scala方法会抛出异常，就需要在Scala的方法前定义注解@throws。</p>
+
+<h2>Resources</h2>
+
+<p>IBM developerWorks Scala 指南：<a href="http://www.ibm.com/developerworks/cn/java/j-scala/">http://www.ibm.com/developerworks/cn/java/j-scala/</a><br/>
+Programming Scala：<a href="http://ofps.oreilly.com/titles/9780596155957/">http://ofps.oreilly.com/titles/9780596155957/</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Chris</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-16T22:34:00+08:00" pubdate data-updated="true">Jun 16<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/scala/'>Scala</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/06/13/the-redis-introduction/" title="Previous Post: The Redis Introduction">&laquo; The Redis Introduction</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <img src="/images/chris.png" width="128" height="178" alt="Chris">
+  <p>
+	  <a href="/about">Chris</a> <br/>
+      Java Developer, @Guangzhou
+  </p>
+</section>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/askcuix@gmail.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/database'>DataBase ( 1 )</a></li><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mac'>Mac ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scala'>Scala ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/16/the-scala-notes/">Scala学习笔记</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/13/the-redis-introduction/">The Redis Introduction</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/09/the-mac-tips/">Mac使用技巧</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/01/the-tool-for-xml-compare/">XML文件比较工具</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/the-git-command/">Git常用命令</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Links</h1>
+    <ul>
+    	<li><a href="http://askcuix.appspot.com" target="_blank">Chris @GAE</a></li>
+		<li><a href="https://github.com/askcuix" target="_blank">Chris @GitHub</a></li>
+		<li><a href="http://mindon.github.com" target="_blank">Mindon.IDEA</a></li>
+		<li><a href="http://aleung.github.com/blog/" target="_blank">Good good study, day day up</a></li>
+    </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Chris -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'askcuix';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://askcuix.github.io/blog/2013/06/16/the-scala-notes/';
+        var disqus_url = 'http://askcuix.github.io/blog/2013/06/16/the-scala-notes/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+</body>
+</html>

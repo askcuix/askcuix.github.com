@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Chris's Blog]]></title>
   <link href="http://askcuix.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://askcuix.github.io/"/>
-  <updated>2013-06-14T00:23:33+08:00</updated>
+  <updated>2013-06-19T23:46:15+08:00</updated>
   <id>http://askcuix.github.io/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -260,7 +260,7 @@
 
 <p>若新生代中Survivor空间中相同年龄的对象大小总和大于Survivor空间的一半，则年龄大于或等于该年龄的对象可以直接进入老年代。</p>
 
-<p><strong>新生代GC（Minor GC）</strong>：新生代的垃圾回收操作，Java对象的生命周期通常较短，因此Minor GC非常频繁。
+<p><strong>新生代GC（Minor GC）</strong>：新生代的垃圾回收操作，Java对象的生命周期通常较短，因此Minor GC非常频繁。 <br/>
 <strong>老年代GC（Major GC / Full GC）</strong>：老年代的垃圾回收操作，发生Full GC通常也会发生至少一次的Minor GC，GC的速度很慢。</p>
 ]]></content>
   </entry>
