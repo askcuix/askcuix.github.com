@@ -4,7 +4,7 @@
   <title><![CDATA[Chris's Blog]]></title>
   <link href="http://askcuix.github.io/atom.xml" rel="self"/>
   <link href="http://askcuix.github.io/"/>
-  <updated>2013-06-19T23:46:15+08:00</updated>
+  <updated>2013-07-21T23:29:56+08:00</updated>
   <id>http://askcuix.github.io/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -628,7 +628,8 @@ Redis响应延迟问题排查：<a href="http://www.oschina.net/translate/redis-
 <strong>总和∑</strong>：option+w<br/>
 <strong>商标Trademark™</strong>：option+2<br/>
 <strong>注册®</strong>：option+r<br/>
-<strong>版权©</strong>：option+g</p>
+<strong>版权©</strong>：option+g<br/>
+<strong>苹果标志</strong>：option+shift+k</p>
 
 <h2>系统管理</h2>
 
@@ -643,6 +644,39 @@ Redis响应延迟问题排查：<a href="http://www.oschina.net/translate/redis-
 <p><strong>执行root权限</strong>：在命令之前增加sudo指令，系统会提示你输入用户密码，执行root权限。</p>
 
 <p><strong>启用root用户</strong>：打开Finder，输入shift+command+g，在前往文件夹中输入：/System/Library/CoreServices，然后在目录中找到目录实用工具并打开，解开左下角的小锁，然后点击顶部编辑菜单，就会看到启用或停用root用户的选项了。然后我们在命令行下执行su -，就可以切换到root目录下，root的默认目录是/var/root。</p>
+
+<h2>日常使用</h2>
+
+<p><strong>调节音量(无“啵啵”声)</strong>：shift+音量调节按钮。</p>
+
+<p><strong>最小音量</strong>：将音量调节减到(F11)静音，然后按静音(F10)调节静音或最小音量。</p>
+
+<p><strong>无确认窗口</strong>：按住option，再点关机、重启、注销时，就不会弹出确认窗口。</p>
+
+<p><strong>选择资料库</strong>：按住option，再打开itunes、iphoto等软件，可以打开选择资料库的对话框。</p>
+
+<p><strong>关闭所有窗口</strong>：command+option+w。</p>
+
+<p><strong>复制文件</strong>：按住option拖拽文件。</p>
+
+<p><strong>创建替身</strong>：按住option+command拖拽文件。</p>
+
+<h2>MAC命令</h2>
+
+<p>显示隐藏文件：</p>
+
+<pre><code>defaults write com.apple.finder AppleShowAllFiles -bool YES
+</code></pre>
+
+<p>恢复隐藏文件不可见：</p>
+
+<pre><code>defaults write com.apple.finder AppleShowAllFiles -bool NO
+</code></pre>
+
+<p>重启Finder：</p>
+
+<pre><code>killall Finder
+</code></pre>
 
 <h2>TextMate</h2>
 
