@@ -91,6 +91,48 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/03/26/common-format-of-csv-files/">Common Format of CSV Files</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-26T23:43:00+08:00" pubdate data-updated="true">Mar 26<span>th</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>CSV是一种常见的文件格式，常用于不同系统之间的数据交换，对于该文件格式可以简单描述为：一组使用逗号“,”分隔字段，并以换行符作为一行数据结束的数据集合。该文件可以使用Microsoft Excel查看，但是中文字符会显示为乱码。</p>
+
+<p>这个描述就真的只是简单描述，实际上CSV的格式处理没有这么简单。最近在和另外一个系统做集成，我们的系统会提供CSV数据文件给对方系统处理，由于我们系统中个别字段会包括换行符“CRLF”（这是遗留系统，就不用纠结为什么字段中会包含换行符了），也就是说一个字段可能会显示在几行上，但是这个字段是包含在双引号中的，结果对方系统就处理不了了。因为对方系统只是简单的按行处理数据，用逗号解析字段。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/03/26/common-format-of-csv-files/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/03/26/the-runtime-memory-of-jvm/">JVM运行时内存区域</a></h1>
     
     
@@ -341,11 +383,15 @@
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li>&raquo; <a href='/blog/categories/database'>DataBase ( 1 )</a></li><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mac'>Mac ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scala'>Scala ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/database'>DataBase ( 2 )</a></li><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mac'>Mac ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scala'>Scala ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/12/postgresql-installation-on-mac/">PostgreSQL installation on MAC</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/06/16/the-scala-notes/">Scala学习笔记</a>
@@ -361,10 +407,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/01/the-tool-for-xml-compare/">XML文件比较工具</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/27/the-git-command/">Git常用命令</a>
       </li>
     
   </ul>
