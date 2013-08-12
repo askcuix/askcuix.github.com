@@ -141,15 +141,39 @@
 </code></pre>
 
 <p> Make sure you set the PostgreSQL path before /usr/bin to ensure that you are using the latest versions and not the default Apple provided, otherwise will encounter error when execute operation.</p></li>
-</ol>
+<li><p><strong>Create User</strong></p>
 
+<pre><code> createuser --superuser Chris -U postgres
+</code></pre></li>
+<li><p><strong>Create Database</strong></p>
+
+<pre><code> createdb mydb
+</code></pre>
+
+<p>If below error encountered, that caused by you use old version PostgreSQL which provide by Apple, change PATH environment variable to solve.</p>
+
+<pre><code>  createdb: could not connect to database postgres: could not connect to server: No such file or directory   
+     Is the server running locally and accepting
+     connections on Unix domain socket "/var/pgsql_socket/.s.PGSQL.5432"?
+</code></pre></li>
+<li><p><strong>Accessing Database</strong></p>
+
+<pre><code> psql mydb
+</code></pre>
+
+<p><strong>mydb=#</strong> means you are a database superuser, otherwise display <strong>mydb=></strong>.</p></li>
+<li><p><strong>Exit psql</strong></p>
+
+<pre><code> mydb=&gt; \q
+</code></pre></li>
+<li><p><strong>Shutdown Database Server</strong></p>
+
+<pre><code> sudo su postgres -c 'pg_ctl -D /opt/local/var/db/postgresql93/defaultdb -l /opt/local/var/log/postgresql/postgres.log stop'
+</code></pre></li>
+</ol>
 
 </div>
   
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/08/12/postgresql-installation-on-mac/">Read on &rarr;</a>
-    </footer>
   
 
 

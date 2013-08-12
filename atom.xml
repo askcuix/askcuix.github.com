@@ -4,7 +4,7 @@
   <title><![CDATA[Chris's Blog]]></title>
   <link href="http://askcuix.github.io/atom.xml" rel="self"/>
   <link href="http://askcuix.github.io/"/>
-  <updated>2013-08-12T20:27:27+08:00</updated>
+  <updated>2013-08-12T20:29:34+08:00</updated>
   <id>http://askcuix.github.io/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -46,13 +46,6 @@
 </code></pre>
 
 <p> Make sure you set the PostgreSQL path before /usr/bin to ensure that you are using the latest versions and not the default Apple provided, otherwise will encounter error when execute operation.</p></li>
-</ol>
-
-
-<!-- more -->
-
-
-<ol>
 <li><p><strong>Create User</strong></p>
 
 <pre><code> createuser --superuser Chris -U postgres
