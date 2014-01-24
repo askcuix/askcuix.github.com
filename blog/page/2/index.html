@@ -92,6 +92,64 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/04/16/garbage-collection-and-memory-allocation/">垃圾收集器及内存分配</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-16T23:54:00+08:00" pubdate data-updated="true">Apr 16<span>th</span>, 2013</time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>程序计数器、虚拟机栈和本地方法栈的内存分配大体在编译器就可以确定，并且这些区域和线程有着相同的生命周期，在方法或线程结束时，内存也就回收了。而Java堆和方法区的内存分配和回收都是动态的，只有在程序运行期间才知道会创建哪些对象，因此是垃圾收集器所关注的内存区域。</p>
+
+<h2>对象标记算法</h2>
+
+<p>Java堆中存放着所有对象实例，垃圾收集器在进行回收前，需要根据算法来确定哪些对象已不再被使用，可进行回收。</p>
+
+<h3>引用计数算法</h3>
+
+<p>该算法是给对象添加一个引用计数器，每当有引用它时，计数器就加1；当引用失效时，计数器就减1；当计数器为0时就不能被使用了。这种算法的判定效率很高，但是很难解决Java对象之间的循环引用问题，因此未被Java语言采用。</p>
+
+<h3>根搜索算法</h3>
+
+<p>通过一系列的名为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象当GC Roots没有任何引用链相连时，则此对象就不能被使用了。</p>
+
+<p>可作为GC Roots的对象包括：
+- 虚拟机栈中的局部变量表所引用的对象。 <br/>
+- 方法区中的类静态属性引用的对象。  <br/>
+- 方法区中的常量引用的对象。 <br/>
+- 本地方法栈中JNI所引用的对象。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/16/garbage-collection-and-memory-allocation/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/04/14/korn-shell-script/">Korn Shell Script</a></h1>
     
     
@@ -486,11 +544,15 @@
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li>&raquo; <a href='/blog/categories/database'>DataBase ( 3 )</a></li><li>&raquo; <a href='/blog/categories/go'>Go ( 1 )</a></li><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mac'>Mac ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scala'>Scala ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/database'>DataBase ( 3 )</a></li><li>&raquo; <a href='/blog/categories/go'>Go ( 2 )</a></li><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mac'>Mac ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scala'>Scala ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/01/24/go-programming-foundations/">Go语言基础</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/01/24/the-command-of-postgresql/">Postgresql常用命令</a>
@@ -506,10 +568,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/16/the-scala-notes/">Scala学习笔记</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/13/the-redis-introduction/">The Redis Introduction</a>
       </li>
     
   </ul>
