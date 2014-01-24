@@ -4,7 +4,7 @@
   <title><![CDATA[Chris's Blog]]></title>
   <link href="http://askcuix.github.io/atom.xml" rel="self"/>
   <link href="http://askcuix.github.io/"/>
-  <updated>2013-12-05T15:42:06+08:00</updated>
+  <updated>2014-01-24T10:33:50+08:00</updated>
   <id>http://askcuix.github.io/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -12,6 +12,101 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Getting start with GoLang]]></title>
+    <link href="http://askcuix.github.io/blog/2014/01/23/getting-start-with-go-lang/"/>
+    <updated>2014-01-23T17:50:00+08:00</updated>
+    <id>http://askcuix.github.io/blog/2014/01/23/getting-start-with-go-lang</id>
+    <content type="html"><![CDATA[<p>Go语言以简单、并行、高效等优点已推出了好几年，但真正影响到很多人去关注的，应该是在最近一年，Go被成功运用到云计算等领域，也出现了越来越多的拥护者。最近因为工作的需要，也开始关注一些并行计算方面的东西，并行作为Go的一大卖点，自然要去了解一下。</p>
+
+<p>我在Mac下先用HomeBrew安装了Go，不过发现安装出来的包不够全，没有godoc，其它还少了什么东西就没去仔细看了，然后还是从官方下载tar包来用。</p>
+
+<p>安装完之后，除了将bin目录加入到path中，还有设置更重要的一个环境变量GOPATH。完成之后就可以开始体验Go了。</p>
+
+<h2>GOPATH</h2>
+
+<p>GOPATH为工作目录，也就是我们写Go程序的workspace。</p>
+
+<p>按照约定，通常有以下三个子目录：</p>
+
+<p><strong>src</strong>：存放源代码（比如：.go等）<br/>
+<strong>pkg</strong>：编译后生成的文件（比如：.a）<br/>
+<strong>bin</strong>：编译后生成的可执行文件（为了方便，可以把此目录加入到 $PATH 变量中）</p>
+
+<!-- more -->
+
+
+<h2>Go常用命令</h2>
+
+<h3>go build</h3>
+
+<p>用于编译源文件。在包的编译过程中，若有必要，会同时编译与之相关联的包。</p>
+
+<p>该命令会忽略目录下以“_”或“.”开头的go文件。</p>
+
+<h3>go clean</h3>
+
+<p>用于移除当前源码包里面编译生成的文件。这些文件包括：</p>
+
+<p><strong>_obj/</strong>：旧的object目录，由Makefiles遗留<br/>
+<strong>_test/</strong>：旧的test目录，由Makefiles遗留<br/>
+<strong>_testmain.go</strong>：旧的gotest文件，由Makefiles遗留<br/>
+<strong>test.out</strong>：旧的test记录，由Makefiles遗留<br/>
+<strong>build.out</strong>：旧的test记录，由Makefiles遗留<br/>
+<strong>*.[568ao]</strong>：object文件，由Makefiles遗留</p>
+
+<p><strong>DIR(.exe)</strong>：由go build产生<br/>
+<strong>DIR.test(.exe)</strong>：由go test -c产生<br/>
+<strong>MAINFILE(.exe)</strong>：由go build MAINFILE.go产生</p>
+
+<h3>go fmt</h3>
+
+<p>用于格式化源代码文件。</p>
+
+<h3>go get</h3>
+
+<p>用于获取远程代码包，目前支持的有BitBucket、GitHub、Google Code和Launchpad。</p>
+
+<p>这个命令在内部实际上分成了两步操作：第一步是下载源码包，第二步是执行go install。</p>
+
+<h3>go install</h3>
+
+<p>这个命令在内部实际上分成了两步操作：第一步是生成结果文件(可执行文件或者.a包)，第二步会把编译好的结果移到 <em>$GOPATH/pkg</em> 或者 <em>$GOPATH/bin</em>。</p>
+
+<h3>go test</h3>
+
+<p>这个命令会自动读取源码目录下面名为<strong>*_test.go</strong>的文件，生成并运行测试用的可执行文件。</p>
+
+<h3>godoc</h3>
+
+<p>查看API文档。</p>
+
+<p>在命令行执行 <code>godoc -http=:&lt;port&gt;</code>，比如 <em>godoc -http=:8080</em>。然后在浏览器中打开127.0.0.1:8080，你将会看到一个golang.org的本地版本，通过它可以查询pkg文档等其它内容。如果你设置了GOPATH，在pkg分类下，不但会列出标准包的文档，还会列出你本地GOPATH中所有项目的相关文档。</p>
+
+<h3>go fix</h3>
+
+<p>用来修复以前老版本的代码到新版本，例如go1之前老版本的代码转化到go1。</p>
+
+<h3>go version</h3>
+
+<p>查看go当前的版本。</p>
+
+<h3>go env</h3>
+
+<p>查看当前go的环境变量。</p>
+
+<h3>go list</h3>
+
+<p>列出当前全部安装的package。</p>
+
+<h3>go run</h3>
+
+<p>编译并运行Go程序。</p>
+
+<p>准备好了开发环境，熟悉了以上常用的命令，就可以开始Go程序的旅程了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[PostgreSQL installation on MAC]]></title>

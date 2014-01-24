@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>外汇指标 - Chris's Blog</title>
+  <title>Getting start with GoLang - Chris's Blog</title>
   <meta name="author" content="Chris">
 
   
-  <meta name="description" content="Forex indicators">
-  <meta name="keywords" content="Finance, Forex, FX, indicator">
+  <meta name="description" content="getting start with go lang">
+  <meta name="keywords" content="go, goLang, command">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://askcuix.github.io/finance/forex-indicators.html">
+  <link rel="canonical" href="http://askcuix.github.io/blog/2014/01/23/getting-start-with-go-lang/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Chris's Blog" type="application/atom+xml">
@@ -85,53 +85,15 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">外汇指标</h1>
-    <p class="meta">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-12-05T14:40:00+08:00" pubdate data-updated="true">Dec 5<span>th</span>, 2013</time></p>
-  </header>
-  
-  <h2>Bollinger Bands 布林线</h2>
-
-<p>布林线是衡量市场波动性的外汇技术指标。基本上说，布林线告诉交易者市场什么时候平静，什么时候波动剧烈。当市场平静的时候，布林线紧缩；而当市场波动剧烈的时候，布林线扩张。当价格稳定时，两根布林线就会紧缩，离得很近；而当价格向上移动时，两根布林线就会彼此分开，距离很远。</p>
-
-<h2>MACD 平滑异同移动平均线</h2>
-
-<p>MACD指标被用来鉴别新的上涨或下跌趋势。</p>
-
-<p>设置MACD需要3个参数：</p>
-
-<ul>
-<li>第一个数字用来设置快速移动平均线的周期。</li>
-<li>第二个数字用来设置慢速移动平均线的周期。</li>
-<li>第三个数字用来计算快慢移动平均线之间的平均距离。</li>
-</ul>
-
-
-<p>例如，将MACD的参数设置为&#8221;12，26，9&#8221;，您就应该这样解释他们的涵义：12代表快速移动平均线是前12日的移动平均线。26代表慢速移动平均线是前26日的移动平均线。9代表快慢移动平均线前9日的差距。在图表上，这段距离常常用一个绿色的垂直柱体来表示，被称作柱状图。</p>
-
-<h2>KDJ 随机指标</h2>
-
-<p>随机指标（又称KDJ指标）可以帮助我们确认趋势在哪里结束。从定义来看，随机指标是一种衡量外汇市场过度买入和过度卖出状况的指标。随机指标中的两条线，类似于MACD中的快慢速移动平均线，也是一条要快于另一条。</p>
-
-  
-    <footer>
+    
+      <h1 class="entry-title">Getting Start With GoLang</h1>
+    
+    
       <p class="meta">
         
-        
 
 
 
@@ -143,11 +105,134 @@
   
 
 
-<time datetime="2013-12-05T14:40:00+08:00" pubdate data-updated="true">Dec 5<span>th</span>, 2013</time>
-        
+<time datetime="2014-01-23T17:50:00+08:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2014</time>
       </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Go语言以简单、并行、高效等优点已推出了好几年，但真正影响到很多人去关注的，应该是在最近一年，Go被成功运用到云计算等领域，也出现了越来越多的拥护者。最近因为工作的需要，也开始关注一些并行计算方面的东西，并行作为Go的一大卖点，自然要去了解一下。</p>
+
+<p>我在Mac下先用HomeBrew安装了Go，不过发现安装出来的包不够全，没有godoc，其它还少了什么东西就没去仔细看了，然后还是从官方下载tar包来用。</p>
+
+<p>安装完之后，除了将bin目录加入到path中，还有设置更重要的一个环境变量GOPATH。完成之后就可以开始体验Go了。</p>
+
+<h2>GOPATH</h2>
+
+<p>GOPATH为工作目录，也就是我们写Go程序的workspace。</p>
+
+<p>按照约定，通常有以下三个子目录：</p>
+
+<p><strong>src</strong>：存放源代码（比如：.go等）<br/>
+<strong>pkg</strong>：编译后生成的文件（比如：.a）<br/>
+<strong>bin</strong>：编译后生成的可执行文件（为了方便，可以把此目录加入到 $PATH 变量中）</p>
+
+<!-- more -->
+
+
+<h2>Go常用命令</h2>
+
+<h3>go build</h3>
+
+<p>用于编译源文件。在包的编译过程中，若有必要，会同时编译与之相关联的包。</p>
+
+<p>该命令会忽略目录下以“_”或“.”开头的go文件。</p>
+
+<h3>go clean</h3>
+
+<p>用于移除当前源码包里面编译生成的文件。这些文件包括：</p>
+
+<p><strong>_obj/</strong>：旧的object目录，由Makefiles遗留<br/>
+<strong>_test/</strong>：旧的test目录，由Makefiles遗留<br/>
+<strong>_testmain.go</strong>：旧的gotest文件，由Makefiles遗留<br/>
+<strong>test.out</strong>：旧的test记录，由Makefiles遗留<br/>
+<strong>build.out</strong>：旧的test记录，由Makefiles遗留<br/>
+<strong>*.[568ao]</strong>：object文件，由Makefiles遗留</p>
+
+<p><strong>DIR(.exe)</strong>：由go build产生<br/>
+<strong>DIR.test(.exe)</strong>：由go test -c产生<br/>
+<strong>MAINFILE(.exe)</strong>：由go build MAINFILE.go产生</p>
+
+<h3>go fmt</h3>
+
+<p>用于格式化源代码文件。</p>
+
+<h3>go get</h3>
+
+<p>用于获取远程代码包，目前支持的有BitBucket、GitHub、Google Code和Launchpad。</p>
+
+<p>这个命令在内部实际上分成了两步操作：第一步是下载源码包，第二步是执行go install。</p>
+
+<h3>go install</h3>
+
+<p>这个命令在内部实际上分成了两步操作：第一步是生成结果文件(可执行文件或者.a包)，第二步会把编译好的结果移到 <em>$GOPATH/pkg</em> 或者 <em>$GOPATH/bin</em>。</p>
+
+<h3>go test</h3>
+
+<p>这个命令会自动读取源码目录下面名为<strong>*_test.go</strong>的文件，生成并运行测试用的可执行文件。</p>
+
+<h3>godoc</h3>
+
+<p>查看API文档。</p>
+
+<p>在命令行执行 <code>godoc -http=:&lt;port&gt;</code>，比如 <em>godoc -http=:8080</em>。然后在浏览器中打开127.0.0.1:8080，你将会看到一个golang.org的本地版本，通过它可以查询pkg文档等其它内容。如果你设置了GOPATH，在pkg分类下，不但会列出标准包的文档，还会列出你本地GOPATH中所有项目的相关文档。</p>
+
+<h3>go fix</h3>
+
+<p>用来修复以前老版本的代码到新版本，例如go1之前老版本的代码转化到go1。</p>
+
+<h3>go version</h3>
+
+<p>查看go当前的版本。</p>
+
+<h3>go env</h3>
+
+<p>查看当前go的环境变量。</p>
+
+<h3>go list</h3>
+
+<p>列出当前全部安装的package。</p>
+
+<h3>go run</h3>
+
+<p>编译并运行Go程序。</p>
+
+<p>准备好了开发环境，熟悉了以上常用的命令，就可以开始Go程序的旅程了。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
       
-        <div class="sharing">
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Chris</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-23T17:50:00+08:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/go/'>Go</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -155,10 +240,21 @@
   
 </div>
 
+    
+    <p class="meta">
       
-    </footer>
-  
+        <a class="basic-alignment left" href="/blog/2013/08/12/postgresql-installation-on-mac/" title="Previous Post: PostgreSQL installation on MAC">&laquo; PostgreSQL installation on MAC</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -235,6 +331,22 @@
 
 </footer>
   
+
+<script type="text/javascript">
+      var disqus_shortname = 'askcuix';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://askcuix.github.io/blog/2014/01/23/getting-start-with-go-lang/';
+        var disqus_url = 'http://askcuix.github.io/blog/2014/01/23/getting-start-with-go-lang/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 
