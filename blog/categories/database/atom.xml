@@ -4,7 +4,7 @@
   <title><![CDATA[Category: DataBase | Chris's Blog]]></title>
   <link href="http://askcuix.github.io/blog/categories/database/atom.xml" rel="self"/>
   <link href="http://askcuix.github.io/"/>
-  <updated>2014-01-24T10:33:50+08:00</updated>
+  <updated>2014-01-24T12:09:58+08:00</updated>
   <id>http://askcuix.github.io/</id>
   <author>
     <name><![CDATA[Chris]]></name>
@@ -12,6 +12,201 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Postgresql常用命令]]></title>
+    <link href="http://askcuix.github.io/blog/2014/01/24/the-command-of-postgresql/"/>
+    <updated>2014-01-24T10:37:00+08:00</updated>
+    <id>http://askcuix.github.io/blog/2014/01/24/the-command-of-postgresql</id>
+    <content type="html"><![CDATA[<p>Postgresql提供了很多快捷的命令，可以很方便的在命令行中使用。以<strong>\</strong>开头的命令需要进入psql执行。</p>
+
+<h2>数据库管理</h2>
+
+<p><strong>创建用户</strong></p>
+
+<pre><code>CREATE USER chris WITH CREATEDB ENCRYPTED PASSWORD '123456';
+</code></pre>
+
+<p><strong>更改用户</strong></p>
+
+<pre><code>ALTER USER chris WITH ENCRYPTED PASSWORD 'chris123';
+</code></pre>
+
+<p><strong>列出所有的Roles</strong></p>
+
+<pre><code>SELECT rolname FROM pg_roles;
+
+or
+
+\du 
+</code></pre>
+
+<p><strong>创建Database</strong></p>
+
+<pre><code>CREATE DATABASE dbname;
+
+or
+
+createdb dbname
+</code></pre>
+
+<p><strong>Grant Right</strong></p>
+
+<pre><code>GRANT ALL PRIVILEGES ON DATABASE mydb to chris;
+</code></pre>
+
+<p><strong>创建Database并指定Role</strong></p>
+
+<pre><code>CREATE DATABASE dbname OWNER rolename;
+
+or
+
+createdb -O rolename dbname
+</code></pre>
+
+<p><strong>删除Database</strong></p>
+
+<pre><code>DROP DATABASE name;
+
+or
+
+dropdb dbname
+</code></pre>
+
+<p><strong>列出所有的Databases</strong></p>
+
+<pre><code>SELECT datname FROM pg_database;
+
+or
+
+\l
+</code></pre>
+
+<p><strong>切换Database</strong></p>
+
+<pre><code>\c dbname
+</code></pre>
+
+<p><strong>列出所有的Tablespaces</strong></p>
+
+<pre><code>SELECT spcname FROM pg_tablespace;
+
+or
+
+\db
+</code></pre>
+
+<p><strong>列出当前Database的所有Tables</strong></p>
+
+<pre><code>\dt
+</code></pre>
+
+<p><strong>查看Table</strong></p>
+
+<pre><code>\d tablename
+</code></pre>
+
+<p><strong>列出当前Database的所有Functions</strong></p>
+
+<pre><code>\df
+</code></pre>
+
+<!-- more -->
+
+
+<h2>系统管理</h2>
+
+<p>以下Postgresql相关的路径信息以Ubuntu为例。</p>
+
+<h3>启动/停止服务</h3>
+
+<p>启动Postgresql服务：</p>
+
+<pre><code>sudo /etc/init.d/postgresql start
+</code></pre>
+
+<p>停止Postgresql服务：</p>
+
+<pre><code>sudo /etc/init.d/postgresql stop
+</code></pre>
+
+<p>重启Postgresql服务：</p>
+
+<pre><code>sudo /etc/init.d/postgresql reload
+</code></pre>
+
+<h3>检查Postgresql进程</h3>
+
+<pre><code>ps auxww | grep ^postgres
+</code></pre>
+
+<h3>Database Log</h3>
+
+<pre><code>/var/log/postgresql  
+</code></pre>
+
+<h3>查看系统参数</h3>
+
+<pre><code>show &lt;parm_name&gt;
+</code></pre>
+
+<h3>查看连接数</h3>
+
+<pre><code>select count(1) from pg_stat_activity; 
+</code></pre>
+
+<h3>数据库备份</h3>
+
+<pre><code>pg_dump -h host -p port -U user dbname &gt; outfile
+</code></pre>
+
+<h3>数据库恢复</h3>
+
+<pre><code>psql -h host -p port dbname &lt; infile
+</code></pre>
+
+<h3>开启远程访问</h3>
+
+<p>在postgresql.conf中更改listen_addresses：</p>
+
+<pre><code>sudo vi /etc/postgresql/9.1/main/postgresql.conf       
+
+listen_addresses="*"
+</code></pre>
+
+<p>在pg_hba.conf中添加host：</p>
+
+<pre><code>sudo vi /etc/postgresql/9.1/main/pg_hba.conf
+
+host  all  all 0.0.0.0/0  md5
+</code></pre>
+
+<h3>调整Database的最大连接数</h3>
+
+<p>Postgresql的最大连接数默认是100，如果我们同时有很多程序一起连接，有时是不够用的，可以postgresql.conf中的参数来调大连接数。</p>
+
+<pre><code>sudo vi /etc/postgresql/9.1/main/postgresql.conf
+</code></pre>
+
+<p>更改以下两个参数的值：</p>
+
+<pre><code>shared_buffers: 25% - 50% of the system RAM
+max_connections: max_connections * work_mem &lt; RAM
+</code></pre>
+
+<p>更改之后需要重启Postgresql，如果遇到SHMMAX not enough的错误，则需要更改SHMMAX的大小。</p>
+
+<pre><code>sudo vi /etc/sysctl.d/30-postgresql-shm.conf
+</code></pre>
+
+<p>更改kernel.shmmax的值，值的大小可以参考之前错误中的提示。</p>
+
+<p>更改完之后需要reload configure:</p>
+
+<pre><code>sudo service procps start
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[PostgreSQL installation on MAC]]></title>

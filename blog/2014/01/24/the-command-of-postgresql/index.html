@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>JVM运行时内存区域 - Chris's Blog</title>
+  <title>Postgresql常用命令 - Chris's Blog</title>
   <meta name="author" content="Chris">
 
   
-  <meta name="description" content="the runtime memory of jvm">
-  <meta name="keywords" content="Java, JVM, Runtime, Memory, 内存模型， 虚拟机">
+  <meta name="description" content="the command of postgresql">
+  <meta name="keywords" content="database, postgresql, command">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://askcuix.github.io/blog/2013/03/26/the-runtime-memory-of-jvm/">
+  <link rel="canonical" href="http://askcuix.github.io/blog/2014/01/24/the-command-of-postgresql/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Chris's Blog" type="application/atom+xml">
@@ -89,7 +89,7 @@
   
   <header>
     
-      <h1 class="entry-title">JVM运行时内存区域</h1>
+      <h1 class="entry-title">Postgresql常用命令</h1>
     
     
       <p class="meta">
@@ -105,56 +105,199 @@
   
 
 
-<time datetime="2013-03-26T23:31:00+08:00" pubdate data-updated="true">Mar 26<span>th</span>, 2013</time>
+<time datetime="2014-01-24T10:37:00+08:00" pubdate data-updated="true">Jan 24<span>th</span>, 2014</time>
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Java虚拟机管理的运行时数据区域：</p>
+<div class="entry-content"><p>Postgresql提供了很多快捷的命令，可以很方便的在命令行中使用。以<strong>\</strong>开头的命令需要进入psql执行。</p>
 
-<ul>
-<li><p>程序计数器</p>
+<h2>数据库管理</h2>
 
-<p>是当前线程所执行的字节码的行号指示器。每条线程都有一个独立的程序计数器，各线程之间的计数器互不影响，该内存区域为线程私有，也不会出现OutOfMemoryError。</p></li>
-<li><p>Java虚拟机栈</p>
+<p><strong>创建用户</strong></p>
 
-<p>该区域也是线程私有，其生命周期与线程相同。虚拟机栈表述的是Java方法执行的内存模型：每个方法被执行的时候都会同时创建一个栈帧用于存储局部变量表、操作数栈、动态链接、方法出口等信息。一个方法被调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中从入栈到出栈的过程。</p>
+<pre><code>CREATE USER chris WITH CREATEDB ENCRYPTED PASSWORD '123456';
+</code></pre>
 
-<p><!-- more --></p>
+<p><strong>更改用户</strong></p>
 
-<p>局部变量表存放了编译期可知的基本类型、对象引用（可能是一个指向对象起始地址的指针，也可能是指向一个对象的句柄，或者是与此对象相关的位置）和retuanAddress类型。64位长度的long和double类型占用2个局部变量空间，其余类型只占用1个。局部变量表所需的内存空间在编译期间完成分配，方法运行期间不会改变。</p>
+<pre><code>ALTER USER chris WITH ENCRYPTED PASSWORD 'chris123';
+</code></pre>
 
-<p>在本区域中，若线程请求的栈深度大于虚拟机所允许的深度，将抛出StackOverflowError；若动态扩展无法申请到足够的内存时抛出OutOfMemoryError。</p></li>
-<li><p>本地方法栈</p>
+<p><strong>列出所有的Roles</strong></p>
 
-<p>与虚拟机栈的作用相似，区别是虚拟机栈为虚拟机执行Java方法服务，本地方法栈为虚拟机使用到的Native方法服务。有的虚拟机实现会将虚拟机栈和本地方法栈合在一起。</p></li>
-<li><p>Java堆</p>
+<pre><code>SELECT rolname FROM pg_roles;
 
-<p>可被所有线程共享，在虚拟机启动时创建。此区域只用于存放对象实例，是垃圾收集器管理的主要区域。堆的扩展可通过-Xmx和-Xms控制。若堆中没有内存完成实例分配，也无法扩展时，将抛出OutOfMemoryError。</p></li>
-<li><p>方法区</p>
+or
 
-<p>可被所有线程共享，用于存放已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。虚拟机规范将方法区描述为堆的一个逻辑部分。该区域很少进行垃圾回收的操作。</p>
+\du 
+</code></pre>
 
-<p>若方法区无法满足内存分配需求时，将抛出OutOfMemoryError。</p></li>
-</ul>
+<p><strong>创建Database</strong></p>
+
+<pre><code>CREATE DATABASE dbname;
+
+or
+
+createdb dbname
+</code></pre>
+
+<p><strong>Grant Right</strong></p>
+
+<pre><code>GRANT ALL PRIVILEGES ON DATABASE mydb to chris;
+</code></pre>
+
+<p><strong>创建Database并指定Role</strong></p>
+
+<pre><code>CREATE DATABASE dbname OWNER rolename;
+
+or
+
+createdb -O rolename dbname
+</code></pre>
+
+<p><strong>删除Database</strong></p>
+
+<pre><code>DROP DATABASE name;
+
+or
+
+dropdb dbname
+</code></pre>
+
+<p><strong>列出所有的Databases</strong></p>
+
+<pre><code>SELECT datname FROM pg_database;
+
+or
+
+\l
+</code></pre>
+
+<p><strong>切换Database</strong></p>
+
+<pre><code>\c dbname
+</code></pre>
+
+<p><strong>列出所有的Tablespaces</strong></p>
+
+<pre><code>SELECT spcname FROM pg_tablespace;
+
+or
+
+\db
+</code></pre>
+
+<p><strong>列出当前Database的所有Tables</strong></p>
+
+<pre><code>\dt
+</code></pre>
+
+<p><strong>查看Table</strong></p>
+
+<pre><code>\d tablename
+</code></pre>
+
+<p><strong>列出当前Database的所有Functions</strong></p>
+
+<pre><code>\df
+</code></pre>
+
+<!-- more -->
 
 
-<h2>对象访问方式</h2>
+<h2>系统管理</h2>
 
-<p>虚拟机规范中未定义对象访问的方式，在主要的虚拟机实现中包含如下两种方式：</p>
+<p>以下Postgresql相关的路径信息以Ubuntu为例。</p>
 
-<ul>
-<li><p>句柄访问</p>
+<h3>启动/停止服务</h3>
 
-<p>在Java堆中划分出一块内存作为句柄池，Java栈中对象引用存储的就是对象的句柄地址，句柄中包含了对象实例数据和类型数据的地址信息。</p>
+<p>启动Postgresql服务：</p>
 
-<p>这种方式在对象引用中存储的是稳定的句柄地址，在对象被移动时只会改变句柄中的实例数据指针，对象引用本身不需要被修改。</p></li>
-<li><p>指针访问</p>
+<pre><code>sudo /etc/init.d/postgresql start
+</code></pre>
 
-<p>Java栈中对象引用存储的就是对象的地址。这种方法的访问速度更快，节省了一次指针定位的开销。</p></li>
-</ul>
+<p>停止Postgresql服务：</p>
 
+<pre><code>sudo /etc/init.d/postgresql stop
+</code></pre>
+
+<p>重启Postgresql服务：</p>
+
+<pre><code>sudo /etc/init.d/postgresql reload
+</code></pre>
+
+<h3>检查Postgresql进程</h3>
+
+<pre><code>ps auxww | grep ^postgres
+</code></pre>
+
+<h3>Database Log</h3>
+
+<pre><code>/var/log/postgresql  
+</code></pre>
+
+<h3>查看系统参数</h3>
+
+<pre><code>show &lt;parm_name&gt;
+</code></pre>
+
+<h3>查看连接数</h3>
+
+<pre><code>select count(1) from pg_stat_activity; 
+</code></pre>
+
+<h3>数据库备份</h3>
+
+<pre><code>pg_dump -h host -p port -U user dbname &gt; outfile
+</code></pre>
+
+<h3>数据库恢复</h3>
+
+<pre><code>psql -h host -p port dbname &lt; infile
+</code></pre>
+
+<h3>开启远程访问</h3>
+
+<p>在postgresql.conf中更改listen_addresses：</p>
+
+<pre><code>sudo vi /etc/postgresql/9.1/main/postgresql.conf       
+
+listen_addresses="*"
+</code></pre>
+
+<p>在pg_hba.conf中添加host：</p>
+
+<pre><code>sudo vi /etc/postgresql/9.1/main/pg_hba.conf
+
+host  all  all 0.0.0.0/0  md5
+</code></pre>
+
+<h3>调整Database的最大连接数</h3>
+
+<p>Postgresql的最大连接数默认是100，如果我们同时有很多程序一起连接，有时是不够用的，可以postgresql.conf中的参数来调大连接数。</p>
+
+<pre><code>sudo vi /etc/postgresql/9.1/main/postgresql.conf
+</code></pre>
+
+<p>更改以下两个参数的值：</p>
+
+<pre><code>shared_buffers: 25% - 50% of the system RAM
+max_connections: max_connections * work_mem &lt; RAM
+</code></pre>
+
+<p>更改之后需要重启Postgresql，如果遇到SHMMAX not enough的错误，则需要更改SHMMAX的大小。</p>
+
+<pre><code>sudo vi /etc/sysctl.d/30-postgresql-shm.conf
+</code></pre>
+
+<p>更改kernel.shmmax的值，值的大小可以参考之前错误中的提示。</p>
+
+<p>更改完之后需要reload configure:</p>
+
+<pre><code>sudo service procps start
+</code></pre>
 </div>
 
 
@@ -177,12 +320,12 @@
   
 
 
-<time datetime="2013-03-26T23:31:00+08:00" pubdate data-updated="true">Mar 26<span>th</span>, 2013</time>
+<time datetime="2014-01-24T10:37:00+08:00" pubdate data-updated="true">Jan 24<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/java/'>Java</a>
+    <a class='category' href='/blog/categories/database/'>DataBase</a>
   
 </span>
 
@@ -200,10 +343,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/03/15/supplementary-characters-in-java/" title="Previous Post: Supplementary Characters in Java">&laquo; Supplementary Characters in Java</a>
+        <a class="basic-alignment left" href="/blog/2014/01/23/getting-start-with-go-lang/" title="Previous Post: Getting start with GoLang">&laquo; Getting start with GoLang</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/03/26/common-format-of-csv-files/" title="Next Post: Common Format of CSV Files">Common Format of CSV Files &raquo;</a>
       
     </p>
   </footer>
@@ -296,8 +437,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://askcuix.github.io/blog/2013/03/26/the-runtime-memory-of-jvm/';
-        var disqus_url = 'http://askcuix.github.io/blog/2013/03/26/the-runtime-memory-of-jvm/';
+        var disqus_identifier = 'http://askcuix.github.io/blog/2014/01/24/the-command-of-postgresql/';
+        var disqus_url = 'http://askcuix.github.io/blog/2014/01/24/the-command-of-postgresql/';
         var disqus_script = 'embed.js';
       
     (function () {
