@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Mobile | Chris's Blog]]></title>
+  <link href="http://askcuix.github.io/blog/categories/mobile/atom.xml" rel="self"/>
+  <link href="http://askcuix.github.io/"/>
+  <updated>2014-02-11T13:14:05+08:00</updated>
+  <id>http://askcuix.github.io/</id>
+  <author>
+    <name><![CDATA[Chris]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[基于Spring Mobile开发移动Web应用]]></title>
+    <link href="http://askcuix.github.io/blog/2014/02/11/develop-mobile-web-application-base-on-spring-mobile/"/>
+    <updated>2014-02-11T12:22:00+08:00</updated>
+    <id>http://askcuix.github.io/blog/2014/02/11/develop-mobile-web-application-base-on-spring-mobile</id>
+    <content type="html"><![CDATA[<p>最近在开发FX Trading的Dashboard的时候，发现用到的一些Bootstrap的样式在手机上的显示效果很不好，而且每笔trade包含的信息也比较多，用手机看实在是不方便，于是就萌生了做一版针对mobile的想法。</p>
+
+<p>Spring Mobile还在1.0的beta版的时候就有了解过，但当时的版本还比较简陋，有些功能都不够完整，其实现在也都比较简单，总共也没多少代码，不过也足以解决mobile相关的一些问题了。Spring Mobile是基于Spring MVC的，如果你的项目本身使用的就是Spring MVC，那基本没多少额外的工作量。我们的项目就是基于Spring MVC的，现在也只是想增加针对mobile的展示，所以controller都可以重用，只需做一些针对mobile的页面就可以了。</p>
+
+<p>Spring Mobile实现的功能主要包括以下四块，也都是配置一下就可以使用了，所以你只需要专注于页面的展示。</p>
+
+<h2>Device Resolution</h2>
+
+<p>访问设备的识别，默认采用LiteDeviceResolver作为实现，通过分析HTTP Header来进行识别，如User-Agent，Accept等。</p>
+
+<p>若是一些特殊的User-Agent被识别成了mobile，可以将这些特殊的User-Agent的关键字定义为一个List<String>，作为LiteDeviceResolver的构造函数的参数，这些User-Agent将会被作为PC来处理。</p>
+
+<p>每个request被处理之前，将会先识别设备类型Device，然后保存在request的<strong>currentDevice</strong>参数中。</p>
+
+<!-- more -->
+
+
+<p>定义DeviceResolverHandlerInterceptor在Spring MVC的配置中，即可实现设备的自动识别。</p>
+
+<pre><code>&lt;interceptors&gt;
+      &lt;!-- resolve the device that originated the web request --&gt;
+      &lt;bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" /&gt;
+&lt;/interceptors&gt; 
+</code></pre>
+
+<p>也可以通过在web.xml中定义DeviceResolverRequestFilter，来实现设备的自动识别。</p>
+
+<pre><code>&lt;filter&gt;
+     &lt;filter-name&gt;deviceResolverRequestFilter&lt;/filter-name&gt;
+     &lt;filter-class&gt;org.springframework.mobile.device.DeviceResolverRequestFilter&lt;/filter-class&gt;
+&lt;/filter&gt; 
+</code></pre>
+
+<p>若要在代码中获取当前设备类型，可以通过以下三种方式：</p>
+
+<p>1、直接从HttpRequest中获取currentDevice参数。</p>
+
+<p>2、使用DeviceUtils，但需要一个ServletRequest或Spring WebRequest作为参数。</p>
+
+<pre><code> Device currentDevice = DeviceUtils.getCurrentDevice(servletRequest); 
+</code></pre>
+
+<p>3、将Device作为Controller中方法的参数，需要添加以下配置。</p>
+
+<pre><code> &lt;annotation-driven&gt;
+      &lt;argument-resolvers&gt;
+           &lt;bean class="org.springframework.mobile.device.DeviceWebArgumentResolver" /&gt;
+      &lt;/argument-resolvers&gt;
+ &lt;/annotation-driven&gt; 
+</code></pre>
+
+<h2>Site Preference</h2>
+
+<p>用于管理web应用采用哪种模式展现给用户。</p>
+
+<p>默认采用StandardSitePreferenceHandler作为实现，首先从request中读取<strong>site_preference</strong>参数，并将读取到的设备类型保存在cookie中；若没读取到，则尝试从cookie中获取<strong>CookieSitePreferenceRepository.SITE_PREFERENCE</strong>，若仍然没有获取到，则采用DeviceResolver得到的设备类型；最终采用的设备类型将会保存在request的<strong>currentSitePreference</strong>参数中。</p>
+
+<p>site_preference支持：normal，mobile和tablet。不区分大小写。 如：</p>
+
+<pre><code>&lt;a href="${currentUrl}?site_preference=mobile"&gt;Mobile&lt;/a&gt;
+</code></pre>
+
+<p>定义SitePreferenceHandlerInterceptor在Spring MVC的配置中，即可实现Site Preference管理。</p>
+
+<pre><code>&lt;interceptors&gt;
+     &lt;!-- manage the user's site preference (declare after DeviceResolverHandlerInterceptor) --&gt;
+     &lt;bean class="org.springframework.mobile.device.site.SitePreferenceHandlerInterceptor" /&gt;
+&lt;/interceptors&gt;
+</code></pre>
+
+<p>若要在代码中获取当前的Site Preference，可以通过一下三种方式：</p>
+
+<p>1、直接从HttpRequest中获取currentSitePreference参数。</p>
+
+<p>2、使用SitePreferenceUtils，但需要一个ServletRequest或Spring WebRequest作为参数。</p>
+
+<pre><code>  SitePreference sitePreference = SitePreferenceUtils.getCurrentSitePreference(servletRequest);
+</code></pre>
+
+<p>3、将SitePreference作为Controller中方法的参数，需要添加以下配置。</p>
+
+<pre><code>  &lt;annotation-driven&gt;
+       &lt;argument-resolvers&gt;
+             &lt;bean class="org.springframework.mobile.device.site.SitePreferenceWebArgumentResolver" /&gt;
+       &lt;/argument-resolvers&gt;
+  &lt;/annotation-driven&gt;
+</code></pre>
+
+<h2>Site Switch</h2>
+
+<p>Site Switch用于移动版和桌面版采用不同domain的应用，如：<em>m.google.com</em> 和 <em>google.com</em>。</p>
+
+<p>Site Switch默认采用StandardSitePreferenceHandler作为Site Preference的实现，因此不需要再配置SitePreferenceHandlerInterceptor。</p>
+
+<h3>mDot</h3>
+
+<p>用于重定向mobile用户到<strong>m.${serverName}</strong>。</p>
+
+<p>定义SiteSwitcherHandlerInterceptor在Spring MVC的配置中：</p>
+
+<pre><code>  &lt;interceptors&gt;
+        &lt;!-- resolve the device that originated the web request --&gt;
+        &lt;bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" /&gt;
+
+
+        &lt;!-- redirects mobile users to "m.myapp.com" (declare after DeviceResolverHandlerInterceptor) --&gt;
+        &lt;bean class=“org.springframework.mobile.device.switcher.SiteSwitcherHandlerInterceptor" factory-method="mDot"&gt;
+              &lt;constructor-arg index="0" type="java.lang.String" value="myapp.com"/&gt;
+              &lt;constructor-arg index="1" type="java.lang.Boolean" value="true"/&gt;
+        &lt;/bean&gt;
+ &lt;/interceptors&gt;
+</code></pre>
+
+<p>第一个参数用于指定serverName，必须的参数；第二个为可选参数，用于指定是否将tablet作为mobile来处理。</p>
+
+<h3>dotMobi</h3>
+
+<p>用于重定向mobile用户到<strong>${serverName - lastDomain}.mobi</strong>。</p>
+
+<p>定义SiteSwitcherHandlerInterceptor在Spring MVC的配置中：</p>
+
+<pre><code>  &lt;interceptors&gt;
+        &lt;!-- resolve the device that originated the web request --&gt;
+        &lt;bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" /&gt;
+
+
+        &lt;!-- redirects mobile users to "myapp.mobi" (declare after DeviceResolverHandlerInterceptor) --&gt;
+        &lt;bean class=“org.springframework.mobile.device.switcher.SiteSwitcherHandlerInterceptor" factory-method="dotMobi"&gt;
+              &lt;constructor-arg index="0" type="java.lang.String" value="myapp.com"/&gt;
+              &lt;constructor-arg index="1" type="java.lang.Boolean" value="true"/&gt;
+        &lt;/bean&gt;
+ &lt;/interceptors&gt;
+</code></pre>
+
+<p>第一个参数用于指定serverName，必须的参数；第二个为可选参数，用于指定是否将tablet作为mobile来处理。</p>
+
+<h3>Standard</h3>
+
+<p>用于重定向mobile和tablet用户到指定的domain。</p>
+
+<p>定义SiteSwitcherHandlerInterceptor在Spring MVC的配置中：</p>
+
+<pre><code>  &lt;interceptors&gt;
+        &lt;!-- resolve the device that originated the web request --&gt;
+        &lt;bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" /&gt;
+
+
+        &lt;!-- redirects mobile users to "mobile.app.com" (declare after DeviceResolverHandlerInterceptor) --&gt;
+        &lt;bean class=“org.springframework.mobile.device.switcher.SiteSwitcherHandlerInterceptor" factory-method="standard"&gt;
+              &lt;constructor-arg value="app.com"/&gt;
+              &lt;constructor-arg value="mobile.app.com"/&gt;
+              &lt;constructor-arg value="tablet.app.com"/&gt;
+              &lt;constructor-arg value=".app.com"/&gt;
+        &lt;/bean&gt;
+ &lt;/interceptors&gt;
+</code></pre>
+
+<p>第一个参数用于指定serverName；第二个参数用于指定mobile的domain，第三个参数用于指定tablet的domain，第四个参数用于指定cookie的domain。</p>
+
+<h3>urlPath</h3>
+
+<p>用于重定向mobile用户到相同domain下的不同的路径 <strong>${serverName}/${mobilePath}</strong>。</p>
+
+<p>定义SiteSwitcherHandlerInterceptor在Spring MVC的配置中：</p>
+
+<pre><code>  &lt;interceptors&gt;
+        &lt;!-- resolve the device that originated the web request --&gt;
+        &lt;bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" /&gt;
+
+
+        &lt;!-- redirects mobile users to "myapp.com/m" (declare after DeviceResolverHandlerInterceptor) --&gt;
+        &lt;bean class=“org.springframework.mobile.device.switcher.SiteSwitcherHandlerInterceptor" factory-method="urlPath"&gt;
+              &lt;constructor-arg index="0" type="java.lang.String" value="/m" /&gt;
+        &lt;/bean&gt;
+ &lt;/interceptors&gt;
+</code></pre>
+
+<p>参数用于指定mobile的路径。</p>
+
+<p>若应用不在domain的根路径下，可指定root path。</p>
+
+<pre><code>&lt;interceptors&gt;
+        &lt;!-- resolve the device that originated the web request --&gt;
+        &lt;bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" /&gt;
+
+
+        &lt;!-- redirects mobile users to "myapp.com/showcase/m" (declare after DeviceResolverHandlerInterceptor) --&gt;
+        &lt;bean class=“org.springframework.mobile.device.switcher.SiteSwitcherHandlerInterceptor" factory-method="urlPath"&gt;
+              &lt;constructor-arg index="0" type="java.lang.String" value="/m" /&gt;
+              &lt;constructor-arg index="1" type="java.lang.String" value="/showcase" /&gt;
+        &lt;/bean&gt;
+ &lt;/interceptors&gt;
+</code></pre>
+
+<p>第一个参数用于指定mobile的路径，第二个参数用于指定应用的root path。</p>
+
+<p>以上两种配置都会将tablet作为PC来处理，如需指定tablet的路径，可通过如下的配置。</p>
+
+<pre><code> &lt;interceptors&gt;
+        &lt;!-- resolve the device that originated the web request --&gt;
+        &lt;bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" /&gt;
+
+
+        &lt;!-- redirects mobile users to "myapp.com/showcase/m" (declare after DeviceResolverHandlerInterceptor) --&gt;
+        &lt;bean class=“org.springframework.mobile.device.switcher.SiteSwitcherHandlerInterceptor" factory-method="urlPath"&gt;
+              &lt;constructor-arg index="0" type="java.lang.String" value="/m" /&gt;
+              &lt;constructor-arg index="1" type="java.lang.String" value="/t" /&gt;
+              &lt;constructor-arg index="2" type="java.lang.String" value="/showcase" /&gt;
+        &lt;/bean&gt;
+ &lt;/interceptors&gt;
+</code></pre>
+
+<p>为了让mobile和tablet的路径能够正常工作，还需要在web.xml中配置相应的url给DispatcherServlet。</p>
+
+<pre><code>  &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+        &lt;url-pattern&gt;/m/*&lt;/url-pattern&gt;
+        &lt;url-pattern&gt;/t/*&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+</code></pre>
+
+<h2>Device Aware View Management</h2>
+
+<p>根据设备类型来决定使用的view，避免了在Controller中判断设备类型来返回特定view的繁琐。LiteDeviceDelegatingViewResolver可以在不同的路径下查找相同名字的view，也可以在相同路径下查找不同后缀的view。</p>
+
+<p>在Spring MVC的配置中添加如下定义：</p>
+
+<pre><code>   &lt;bean class="org.springframework.mobile.device.view.LiteDeviceDelegatingViewResolver"&gt;
+         &lt;constructor-arg&gt;
+               &lt;bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;
+                     &lt;property name="prefix" value="/WEB-INF/views/" /&gt;
+                     &lt;property name="suffix" value=".jsp" /&gt;
+              &lt;/bean&gt;
+         &lt;/constructor-arg&gt;
+         &lt;property name="mobilePrefix" value="mobile/" /&gt;
+         &lt;property name="tabletPrefix" value="tablet/" /&gt;
+         &lt;property name="enableFallback" value="true" /&gt;
+   &lt;/bean&gt;
+</code></pre>
+
+<p>enableFallback用于若找不到调整路径后的view，则使用原始的view。这是一个很好的特性，但是在Spring MVC并没有真正实现它，所以这个参数是不起作用的。</p>
+
+<p>可参见spring的issue list：</p>
+
+<p><a href="https://jira.springsource.org/browse/MOBILE-76?page=com.atlassian.jira.plugin.system.issuetabpanels">Spring Mobile / MOBILE-76</a></p>
+
+<p><a href="https://jira.springsource.org/browse/SPR-7727?page=com.atlassian.jira.plugin.system.issuetabpanels">Spring Framework / SPR-7727</a></p>
+]]></content>
+  </entry>
+  
+</feed>

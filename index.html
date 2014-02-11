@@ -92,6 +92,58 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2014/02/11/develop-mobile-web-application-base-on-spring-mobile/">基于Spring Mobile开发移动Web应用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-11T12:22:00+08:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近在开发FX Trading的Dashboard的时候，发现用到的一些Bootstrap的样式在手机上的显示效果很不好，而且每笔trade包含的信息也比较多，用手机看实在是不方便，于是就萌生了做一版针对mobile的想法。</p>
+
+<p>Spring Mobile还在1.0的beta版的时候就有了解过，但当时的版本还比较简陋，有些功能都不够完整，其实现在也都比较简单，总共也没多少代码，不过也足以解决mobile相关的一些问题了。Spring Mobile是基于Spring MVC的，如果你的项目本身使用的就是Spring MVC，那基本没多少额外的工作量。我们的项目就是基于Spring MVC的，现在也只是想增加针对mobile的展示，所以controller都可以重用，只需做一些针对mobile的页面就可以了。</p>
+
+<p>Spring Mobile实现的功能主要包括以下四块，也都是配置一下就可以使用了，所以你只需要专注于页面的展示。</p>
+
+<h2>Device Resolution</h2>
+
+<p>访问设备的识别，默认采用LiteDeviceResolver作为实现，通过分析HTTP Header来进行识别，如User-Agent，Accept等。</p>
+
+<p>若是一些特殊的User-Agent被识别成了mobile，可以将这些特殊的User-Agent的关键字定义为一个List<String>，作为LiteDeviceResolver的构造函数的参数，这些User-Agent将会被作为PC来处理。</p>
+
+<p>每个request被处理之前，将会先识别设备类型Device，然后保存在request的<strong>currentDevice</strong>参数中。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/11/develop-mobile-web-application-base-on-spring-mobile/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2014/01/24/go-programming-foundations/">Go语言基础</a></h1>
     
     
@@ -684,48 +736,6 @@ or
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/">Spring NamedParameterJdbcTemplate的内存泄漏问题</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-06T22:36:00+08:00" pubdate data-updated="true">May 6<span>th</span>, 2013</time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>我们的项目是使用Spring JDBC来操作DB的，通常是直接使用SimpleJdbcTemplate，一直以来也没发现什么问题。今天在做performance test的时候，发现内存增长很快，甚至出现了out of memory。把heap dump拉下来查看后，发现是这次新加的一个service出现了问题，但根源是因为NamedParameterJdbcTemplate中的HashMap导致的。</p>
-
-<p>这里要先说明使用的Spring的版本是2.5.6，在3.0.3中已修复该问题。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/05/06/the-memory-leak-problem-of-spring-namedparameterjdbctemplate/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -757,11 +767,15 @@ or
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li>&raquo; <a href='/blog/categories/database'>DataBase ( 3 )</a></li><li>&raquo; <a href='/blog/categories/go'>Go ( 2 )</a></li><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mac'>Mac ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scala'>Scala ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
+    <ul id="category-list"><li>&raquo; <a href='/blog/categories/database'>DataBase ( 3 )</a></li><li>&raquo; <a href='/blog/categories/go'>Go ( 2 )</a></li><li>&raquo; <a href='/blog/categories/java'>Java ( 7 )</a></li><li>&raquo; <a href='/blog/categories/life'>Life ( 1 )</a></li><li>&raquo; <a href='/blog/categories/linux'>Linux ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mac'>Mac ( 1 )</a></li><li>&raquo; <a href='/blog/categories/mobile'>Mobile ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scala'>Scala ( 1 )</a></li><li>&raquo; <a href='/blog/categories/scm'>SCM ( 1 )</a></li><li>&raquo; <a href='/blog/categories/tools'>Tools ( 2 )</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/02/11/develop-mobile-web-application-base-on-spring-mobile/">基于Spring Mobile开发移动Web应用</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/01/24/go-programming-foundations/">Go语言基础</a>
@@ -777,10 +791,6 @@ or
     
       <li class="post">
         <a href="/blog/2013/08/12/postgresql-installation-on-mac/">PostgreSQL installation on MAC</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/16/the-scala-notes/">Scala学习笔记</a>
       </li>
     
   </ul>

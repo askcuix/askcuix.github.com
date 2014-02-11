@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>XML文件比较工具 - Chris's Blog</title>
+  <title>Category: Mobile - Chris's Blog</title>
   <meta name="author" content="Chris">
 
   
-  <meta name="description" content="The tool for xml compare">
-  <meta name="keywords" content="java, xml, compare, tool">
+  <meta name="description" content="Category: Mobile">
+  <meta name="keywords" content="Chris's Blog">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://askcuix.github.io/blog/2013/06/01/the-tool-for-xml-compare/">
+  <link rel="canonical" href="http://askcuix.github.io/blog/categories/mobile/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Chris's Blog" type="application/atom+xml">
@@ -85,112 +85,36 @@
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry" role="article">
+<article role="article">
   
   <header>
-    
-      <h1 class="entry-title">XML文件比较工具</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-01T17:27:00+08:00" pubdate data-updated="true">Jun 1<span>st</span>, 2013</time>
-      </p>
+    <h1 class="entry-title">Category: Mobile</h1>
     
   </header>
-
-
-<div class="entry-content"><p>最近公司的新产品准备上线，因为涉及到多个系统之间的集成，所以要做几轮的模拟测试，以保证系统间的稳定运行以及数据的准确性。对于其中一个Batch Job，我们需要生成多种XML给其它系统使用，这个Batch并不是全新的，在之前的版本就有，但是这次数据模型有变动，一些业务逻辑也有少许变动，但期望生成的数据是一样的，所以就需要比较两个版本的系统所生成的XML。</p>
-
-<p>现在真是越来越不喜欢XML，超过30M的文件，基本就不可能用NotePad++打开了（与我的机器配置太差也有关系）。通常对于一些小的文件，还可以用Beyond Compare之类的比较工具，而我们Batch生成的XML文件可能会超过100M，那就不可能通过一些桌面软件去做比较了，而且数量太大，肉眼比较的准确性也不能保证。<!-- more -->这些XML文件中主要是金融产品信息，由于在生成文件的时候并没有做排序，因此每次生成的文件中，产品的顺序可能也是不同的，这样就更难用比较工具了。</p>
-
-<p>对于这种情况，只能自己去写个比较工具了，在网上找了一下，也没找到满足要求的，现在代码已经完成，放在<a href="https://github.com/askcuix/xml-compare-tool">GitHub</a>,可以生成比较详细的统计信息，如XML中的record数量，不同record的数量，不相同的field，处理时间等。在我那台破机器上，比较两个150M的文件，可以在两分钟内完成。</p>
-
-<p>具体的用法可项目的主页上已经有描述了，这里简单说下实现的思路，因为实现的比较匆忙，有很多考虑不周的地方。实现的步骤如下：</p>
-
-<ol>
-<li>通过SAX解析将源文件解析成一个Map，key为产品ID，可以为一个或多个element组合而成，value为该产品所对应的XML内容。</li>
-<li>仍然通过SAX解析待比较的文件，每解析出一个产品信息，就从之前的Map中取出相同的产品信息，这时就得到了相同产品的两个版本的内容。如果产品只存在于待比较的文件中，则计入不同record的数量。</li>
-<li>使用DOM解析两个XML片段，结果放在两个Map中，key为element的名字，value的element的值。这里需要考虑几种情况：如果element是可选的，则可能只出现在其中一个XML片段中；如果element是重复性的组合元素，则当作一个field。</li>
-<li>在比较的过程中，每比较完一个XML片段就删除引用，以达到在内存不够时，可以通过GC释放内存。</li>
-<li>当比较结束，第一步产生的Map中若还有产品存在，则为待比较的文件中没有的产品，计入不同record的数量。</li>
-<li>统计比较结果，一并写入文件中。</li>
-</ol>
-
-
-<p>暂时未考虑到更好的有效利用内存的方法，对于比较重复性的element，现在是通过配置来识别，一直在纠结要不要通过解析XSD来实现，但这种方式既增加了代码的复杂性，也很难去处理不同级别的重复性元素，比如root element是productList，下一级就是重复性的元素product,对于这种情况，是不应当视为重复性元素来处理的。</p>
-
-<p>改进还要继续，提供给更多有相似需求的人使用。</p>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">Chris</span></span>
-
-      
-
-
-
-
-
+  <div id="blog-archives" class="category">
 
 
 
   
+  <h2>2014</h2>
+
+<article>
+  
+<h1><a href="/blog/2014/02/11/develop-mobile-web-application-base-on-spring-mobile/">基于Spring Mobile开发移动Web应用</a></h1>
+<time datetime="2014-02-11T12:22:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>11</span> <span class='year'>2014</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/mobile/'>Mobile</a></span>
+</footer>
 
 
-<time datetime="2013-06-01T17:27:00+08:00" pubdate data-updated="true">Jun 1<span>st</span>, 2013</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/java/'>Java</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2013/05/27/the-git-command/" title="Previous Post: Git常用命令">&laquo; Git常用命令</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2013/06/09/the-mac-tips/" title="Next Post: Mac使用技巧">Mac使用技巧 &raquo;</a>
-      
-    </p>
-  </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
-  </section>
+
+  
+</article>
 
 </div>
 
@@ -272,10 +196,7 @@
       var disqus_shortname = 'askcuix';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://askcuix.github.io/blog/2013/06/01/the-tool-for-xml-compare/';
-        var disqus_url = 'http://askcuix.github.io/blog/2013/06/01/the-tool-for-xml-compare/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
